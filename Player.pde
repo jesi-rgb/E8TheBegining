@@ -43,7 +43,6 @@ class Player {
       image(sprites[currentDirection][1+int(currentFrame)], position.x, position.y);
     } else {
       image(sprites[currentDirection][0], position.x, position.y);
-      println("inmotion = false");
     }
   }
 

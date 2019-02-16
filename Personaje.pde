@@ -1,4 +1,4 @@
-class Player {
+class Personaje {
   PVector position; //Pretty self explanatory vectors.
   PVector velocity;
   PVector acceleration;
@@ -18,12 +18,13 @@ class Player {
   Constructor del personaje. Se le pasa un vector posición para indicar
    la posición en pantalla.
    */
-  Player(PVector pos) {
+  Personaje(PVector pos) {
     position = pos;
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
     currentFrame = 0;
     inMotion = false;
+    currentDirection = RIGHT;
     sprites = new PImage[2][numSprites];
     for (int i=0; i<numSprites; i++) {
       sprites[LEFT][i] = loadImage("media/"+LEFT+"/spr"+(i+1)+".png");
@@ -72,7 +73,7 @@ class Player {
     currentFrame = (currentFrame + frameRateFactor) % (numSprites-1);
 
     /*
-    Esta comprobación evalúa si xDelta está en el intervalo [-0.3, 0] o [0, 0.3].
+     Esta comprobación evalúa si xDelta está en el intervalo [-0.3, 0] o [0, 0.3].
      
      Debido a cómo funcionan los PVectores aquí, nunca llegan a ser 0 del todo, y 
      cuando nuestra velocidad sea 0, queremos poner inMotion a false
@@ -81,7 +82,9 @@ class Player {
      Por ello, necesitamos evaluar si está en un umbral aceptable para parar, en vez
      de comprobar directamente si xDelta == 0.
      */
-    if ( ((xDelta < 0.3) && (xDelta > 0)) || ((xDelta > -0.3) && (xDelta < 0)) ) 
+     
+     
+    if ( ((xDelta < 0.3) && (xDelta >= 0)) || ((xDelta > -0.3) && (xDelta <= 0)) ) 
       inMotion = false;
     else {
       inMotion = true;

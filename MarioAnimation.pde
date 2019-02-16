@@ -1,15 +1,16 @@
-Player p;
+Jugador p;
 Boolean[] keys;
 
 void setup() {
-
-  fullScreen();
+  size(720, 480);
+  //fullScreen();
   frameRate(40);
   keys = new Boolean[128];
   for (int i=0; i<keys.length; i++) {
     keys[i] = false;
   }
-  p = new Player(new PVector(width/2, height/2));
+  p = new Jugador(new PVector(width/2, height/2));
+  
 }
 
 void draw() {

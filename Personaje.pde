@@ -9,26 +9,27 @@ class Personaje {
   int currentDirection; //Nos dice la dirección hacia la que mira el personaje.
   float currentFrame; //Nos indica el sprite que estamos reproduciendo.
 
-  final int LEFT = 0, RIGHT = 1; //Pretty self explanatory constants.
-  final int numSprites = 8;
-  final int velocityLimit = 8;
+   //Pretty self explanatory constants.
+  final int NUM_SPRITES = 8;
+  final int VELOCITY_LIMIT = 8;
+  final int NUM_STATES = 2; //estados del personaje (saltar, correr dcha, izda, etc...)
 
 
   /*
   Constructor del personaje. Se le pasa un vector posición para indicar
    la posición en pantalla.
    */
-  Personaje(PVector pos) {
+  Personaje(PVector pos, String spriteDirectory) {
     position = pos;
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
     currentFrame = 0;
     inMotion = false;
     currentDirection = RIGHT;
-    sprites = new PImage[2][numSprites];
-    for (int i=0; i<numSprites; i++) {
-      sprites[LEFT][i] = loadImage("media/"+LEFT+"/spr"+(i+1)+".png");
-      sprites[RIGHT][i] = loadImage("media/"+RIGHT+"/spr"+(i+1)+".png");
+    sprites = new PImage[NUM_STATES][NUM_SPRITES];
+    for (int i=0; i<NUM_SPRITES; i++) {
+      sprites[LEFT][i] = loadImage("media/"+spriteDirectory+"/"+LEFT+"/spr"+(i+1)+".png");
+      sprites[RIGHT][i] = loadImage("media/"+spriteDirectory+"/"+RIGHT+"/spr"+(i+1)+".png");
     }
   }
 
@@ -61,16 +62,16 @@ class Personaje {
       dragForce(velocity, 0.88);
     }
     velocity.add(acceleration);
-    velocity.limit(velocityLimit);
-    acceleration.limit(velocityLimit);
+    velocity.limit(VELOCITY_LIMIT);
+    acceleration.limit(VELOCITY_LIMIT);
 
 
     //Esta sección actualiza los sprites.
 
     //Cálculo para ver qué velocidad tenemos y loopear sobre los sprites
     //en base a esa velocidad.
-    float frameRateFactor = abs(map(velocity.x, 1, velocityLimit, 1, 1.4));
-    currentFrame = (currentFrame + frameRateFactor) % (numSprites-1);
+    float frameRateFactor = abs(map(velocity.x, 1, VELOCITY_LIMIT, 1, 1.4));
+    currentFrame = (currentFrame + frameRateFactor) % (NUM_SPRITES-1);
 
     /*
      Esta comprobación evalúa si xDelta está en el intervalo [-0.3, 0] o [0, 0.3].

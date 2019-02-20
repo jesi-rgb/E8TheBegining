@@ -1,6 +1,6 @@
-class Enemigo extends Personaje{
+class Enemigo extends Personaje {
 
-  Enemigo(PVector pos, String spriteDirectory){
-    super(pos, spriteDirectory);
+  Enemigo(Vec2 center, String spriteDirectory) {
+    super(center, spriteDirectory);
   }
 }

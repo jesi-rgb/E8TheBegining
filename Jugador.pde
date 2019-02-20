@@ -1,8 +1,7 @@
-class Jugador extends Personaje{
+class Jugador extends Personaje {
 
 
-  Jugador(PVector pos, String spriteDirectory){
-    super(pos, spriteDirectory);
+  Jugador(Vec2 center, String spriteDirectory) {
+    super(center, spriteDirectory);
   }
-  
 }

@@ -11,18 +11,16 @@ final static int LEFT = 0, RIGHT = 1;
 
 Box2DProcessing box2d;
 Suelo s;
-Suelo pared;
+Suelo[] pared = new Suelo[2];
 
 Jugador jug;
 Boolean[] keys;
 
-float x, y;
-
 void setup() {
-  size(840, 600, P2D);
+  size(840, 900, P2D);
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
-  box2d.setGravity(0, -100);
+  box2d.setGravity(0, -700);
 
   frameRate(40);
   imageMode(CENTER);
@@ -32,27 +30,25 @@ void setup() {
     keys[i] = false;
   }
 
-  x = width/2-80;
-  y = height/2;
-  
+
   jug = new Jugador(new Vec2(width/2, height/2), "jugador");
   s = new Suelo(width/2, height-50, width, 50);
-  pared = new Suelo(x, y, 30, height);
+  pared[0] = new Suelo(0, height/2, 30, height*100);
+  pared[1] = new Suelo(width, height/2, 30, height*100);
 }
 
 void draw() {
   background(140, 200, 0);
   box2d.step();
 
-  
-
-  jug.display();
   jug.mover();
-
+  jug.display();
+  //jug.jump();
 
   s.display();
   //pared.move();
-  pared.display();
+  pared[0].display();
+  pared[1].display();
 }
 
 void keyPressed() {

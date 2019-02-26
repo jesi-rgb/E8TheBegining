@@ -1,19 +1,17 @@
-
-static enum state {
+static enum State {
   stop, left, right
 }
 
 class Personaje {
-
-
   //Vec2 position; //Pretty self explanatory vectors.
   Vec2 velocity;
   //Vec2 acceleration;
 
   PImage[][] sprites; //Matriz para guardar los sprites.
 
-  state state;
+  State state; //Indica si el personaje está parado, en movimiento, saltando, etc...
   Boolean inMotion; //Comprueba si el personaje está en movimiento o no.
+  Boolean onAir;
   int currentDirection; //Nos dice la dirección hacia la que mira el personaje.
   float currentFrame; //Nos indica el sprite que estamos reproduciendo.
 
@@ -33,10 +31,11 @@ class Personaje {
 
     velocity = new Vec2(0, 0);
 
-    state = state.stop;
+    state = State.stop;
 
     currentFrame = 0;
     inMotion = false;
+    onAir = false;
     currentDirection = RIGHT;
 
     sprites = new PImage[NUM_STATES][NUM_SPRITES];
@@ -57,14 +56,14 @@ class Personaje {
    u otro, y esto viene guiado por el atributo inMotion.
    */
   void display() {
-    
+
     Vec2 pos = box2d.getBodyPixelCoord(body);
     currentFrame = (currentFrame + 1) % (NUM_SPRITES-1);
     Vec2 vel = body.getLinearVelocity();
-    
-    if( (vel.x > -4.5 && vel.x <= 0) || (vel.x < 4.5 && vel.x >= 0) )
+
+    if ( (vel.x > -4.5 && vel.x <= 0) || (vel.x < 4.5 && vel.x >= 0) )
       inMotion = false;
-    
+
     if (inMotion) {
       image(sprites[currentDirection][1+int(currentFrame)], pos.x, pos.y);
     } else {
@@ -72,100 +71,50 @@ class Personaje {
     }
   }
 
-  /*
-  Función que actualiza todo lo referente al personaje.
-   El parámetro xDelta se utiliza para comprobar en qué 
-   dirección se estaba moviendo.
-   */
-  //void update() {
-
-    //Esta sección actualiza las físicas del personaje.
-    //position.add(velocity);
-    //if (!keyPressed) {
-    //  dragForce(acceleration, 0.5);
-    //  dragForce(velocity, 0.88);
-    //}
-    //velocity.add(acceleration);
-    //velocity.limit(VELOCITY_LIMIT);
-    //acceleration.limit(VELOCITY_LIMIT);
-
-
-    //Esta sección actualiza los sprites.
-
-    //Cálculo para ver qué velocidad tenemos y loopear sobre los sprites
-    //en base a esa velocidad.
-    //float frameRateFactor = abs(map(velocity.x, 1, VELOCITY_LIMIT, 1, 1.4));
-    //currentFrame = (currentFrame + 1) % (NUM_SPRITES-1);
-
-    /*
-     Esta comprobación evalúa si xDelta está en el intervalo [-0.3, 0] o [0, 0.3].
-     
-     Debido a cómo funcionan los PVectores aquí, nunca llegan a ser 0 del todo, y 
-     cuando nuestra velocidad sea 0, queremos poner inMotion a false
-     para activar el sprite de estar de pie, y no corriendo. 
-     
-     Por ello, necesitamos evaluar si está en un umbral aceptable para parar, en vez
-     de comprobar directamente si xDelta == 0.
-     */
-
-
-    //if ( ((xDelta < 0.3) && (xDelta >= 0)) || ((xDelta > -0.3) && (xDelta <= 0)) ) 
-    //  inMotion = false;
-    //else {
-    //  inMotion = true;
-    //  if (xDelta < 0)
-    //    currentDirection = LEFT;
-    //  else if (xDelta > 0)
-    //    currentDirection = RIGHT;
-    //}
-
-    //position.x += xDelta;
-//  }
-
   void mover() {
     Vec2 vel = body.getLinearVelocity();
 
     if (keyPressed) {
       if (keys[37]) {
-        state = state.left;
+        state = State.left;
       }
       if (keys[39]) {
-        state = state.right;
-        println("right");
+        state = State.right;
       }
-
-      //body.applyForce(velocity, pos);
-      //inMotion = true;
-      //if (velocity.x > 0)
-      //  currentDirection = RIGHT;
-      //else
-      //  currentDirection = LEFT;
+      if (keys[32]) {
+        float impulse = body.getMass() * 1000;
+        vel.y += impulse;
+      }
     } else {
-      //velocity.x *= -0.1;
-      //body.applyForce(velocity, pos);
-      //inMotion = false;
-      
-      state = state.stop;
-      
+      state = State.stop;
     }
-    
-    switch(state){
-      case left:
-        vel.x -= 10;
-        inMotion = true;
-        currentDirection = LEFT;
-        break;
-      case right:
-        vel.x += 10;
-        inMotion = true;
-        currentDirection = RIGHT;
-        break;
-      case stop:
-        vel.x *= 0.69;
-        break;
+
+    switch(state) {
+    case left:
+      vel.x -= 10;    
+      inMotion = true;
+      currentDirection = LEFT;
+      break;
+    case right:
+      vel.x += 10;
+      inMotion = true;
+      currentDirection = RIGHT;
+      break;
+    case stop:
+      vel.x *= 0.69;
+      break;
     }
-    
     body.setLinearVelocity(vel);
+  }
+
+  void jump() {
+    if (keys[32]) {
+      float impulse = body.getMass() * 1000;
+      Vec2 vel = body.getLinearVelocity();
+      //body.applyLinearImpulse( new Vec2(vel.x, impulse), body.getWorldCenter(), true);
+      vel.y += impulse;
+      body.setLinearVelocity(vel);
+    }
   }
 
 

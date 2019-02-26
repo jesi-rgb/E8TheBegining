@@ -49,7 +49,7 @@ class Suelo {
   // Draw the boundary, if it were at an angle we'd have to do something fancier
   void display() {
     Vec2 pos = box2d.getBodyPixelCoord(b);
-    
+
     fill(0);
     stroke(0);
     rectMode(CENTER);

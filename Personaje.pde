@@ -62,7 +62,7 @@ class Personaje {
     currentFrame = (currentFrame + 1) % (NUM_SPRITES-1);
     Vec2 vel = body.getLinearVelocity();
     
-    if( (vel.x > -1 && vel.x <= 0) || (vel.x < 1 && vel.x >= 0) )
+    if( (vel.x > -4.5 && vel.x <= 0) || (vel.x < 4.5 && vel.x >= 0) )
       inMotion = false;
     
     if (inMotion) {
@@ -151,17 +151,17 @@ class Personaje {
     
     switch(state){
       case left:
-        vel.x -= 5;
+        vel.x -= 10;
         inMotion = true;
         currentDirection = LEFT;
         break;
       case right:
-        vel.x += 5;
+        vel.x += 10;
         inMotion = true;
         currentDirection = RIGHT;
         break;
       case stop:
-        vel.x *= 0.95;
+        vel.x *= 0.69;
         break;
     }
     

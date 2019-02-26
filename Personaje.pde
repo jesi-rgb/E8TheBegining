@@ -2,7 +2,6 @@ static enum State {
   stop, left, right
 }
 
-
 abstract class Personaje {
 
   //Vec2 position; //Pretty self explanatory vectors.

@@ -2,7 +2,9 @@ static enum State {
   stop, left, right
 }
 
-class Personaje {
+
+abstract class Personaje {
+
   //Vec2 position; //Pretty self explanatory vectors.
   Vec2 velocity;
   //Vec2 acceleration;
@@ -71,74 +73,8 @@ class Personaje {
     }
   }
 
-  void mover() {
-    Vec2 vel = body.getLinearVelocity();
 
-    if (keyPressed) {
-      if (keys[37]) {
-        state = State.left;
-      }
-      if (keys[39]) {
-        state = State.right;
-      }
-      if (keys[32]) {
-        float impulse = body.getMass() * 1000;
-        vel.y += impulse;
-      }
-    } else {
-      state = State.stop;
-    }
-
-    switch(state) {
-    case left:
-      vel.x -= 10;    
-      inMotion = true;
-      currentDirection = LEFT;
-      break;
-    case right:
-      vel.x += 10;
-      inMotion = true;
-      currentDirection = RIGHT;
-      break;
-    case stop:
-      vel.x *= 0.69;
-      break;
-    }
-    body.setLinearVelocity(vel);
-  }
-
-  void jump() {
-    if (keys[32]) {
-      float impulse = body.getMass() * 1000;
-      Vec2 vel = body.getLinearVelocity();
-      //body.applyLinearImpulse( new Vec2(vel.x, impulse), body.getWorldCenter(), true);
-      vel.y += impulse;
-      body.setLinearVelocity(vel);
-    }
-  }
-
-
-  /*
-   Función para hacer que si llega a un borde, aparezca
-   por el otro
-   */
-  void edges() {
-    Vec2 position = box2d.getBodyPixelCoord(body);
-
-    if (position.x > width)
-      position.x = 0;
-    if (position.x < 0)
-      position.x = width;
-    if (position.y > height)
-      position.y = 0;
-    if (position.y < 0)
-      position.y = height;
-
-    if (position.y >= height/2) {
-      position.y = height/2;
-    }
-  }
-
+  abstract void mover();
 
   void makeBody(Vec2 center) {
     //Define a body

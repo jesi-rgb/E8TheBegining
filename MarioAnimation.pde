@@ -21,6 +21,7 @@ void setup() {
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
   box2d.setGravity(0, -700);
+  
 
   frameRate(40);
   imageMode(CENTER);
@@ -42,8 +43,9 @@ void draw() {
   box2d.step();
 
   jug.mover();
+  jug.jump();
   jug.display();
-  //jug.jump();
+  
 
   s.display();
   //pared.move();

@@ -37,4 +37,19 @@ class Jugador extends Personaje {
 
     body.setLinearVelocity(vel);
   }
+
+  void jump() {
+    Vec2 vel = body.getLinearVelocity();
+    if (keys[32] && !(vel.y < 0) && !onAir) {
+      onAir = true;
+    }else
+      onAir = false;
+    
+    if(onAir){
+      vel.y += 150;
+      body.applyLinearImpulse(vel, body.getWorldCenter(), true);
+    }
+    println(vel.y);
+    
+  }
 }

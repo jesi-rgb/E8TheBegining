@@ -20,7 +20,7 @@ void setup() {
   size(840, 900, P2D);
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
-  box2d.setGravity(0, -700);
+  box2d.setGravity(0, -100);
 
 
   frameRate(40);

@@ -21,7 +21,7 @@ abstract class Personaje {
   //Pretty self explanatory constants.
   final int NUM_SPRITES = 8;
   final int VELOCITY_LIMIT = 8;
-  final int NUM_STATES = 2; //estados del personaje (saltar, correr dcha, izda, etc...)
+  final int NUM_STATES = 3; //estados del personaje (saltar, correr dcha, izda, etc...)
 
 
   /*
@@ -44,6 +44,8 @@ abstract class Personaje {
       sprites[LEFT][i] = loadImage("media/"+spriteDirectory+"/"+LEFT+"/spr"+(i+1)+".png");
       sprites[RIGHT][i] = loadImage("media/"+spriteDirectory+"/"+RIGHT+"/spr"+(i+1)+".png");
     }
+    sprites[2][0] = loadImage("media/"+spriteDirectory+"/jump/jump0.png");
+    sprites[2][1] = loadImage("media/"+spriteDirectory+"/jump/jump1.png");
 
     makeBody(center);
     body.setUserData(this);
@@ -65,11 +67,14 @@ abstract class Personaje {
     if ( (vel.x > -4.5 && vel.x <= 0) || (vel.x < 4.5 && vel.x >= 0) )
       inMotion = false;
 
-    if (inMotion) {
-      image(sprites[currentDirection][1+int(currentFrame)], pos.x, pos.y);
-    } else {
-      image(sprites[currentDirection][0], pos.x, pos.y);
-    }
+    if (onAir) {
+      image(sprites[2][currentDirection], pos.x, pos.y);
+    } else
+      if (inMotion) {
+        image(sprites[currentDirection][1+int(currentFrame)], pos.x, pos.y);
+      } else {
+        image(sprites[currentDirection][0], pos.x, pos.y);
+      }
   }
 
 

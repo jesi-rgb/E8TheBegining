@@ -40,19 +40,20 @@ class Jugador extends Personaje {
 
   void jump() {
     Vec2 vel = body.getLinearVelocity();
-    if (keys[32] && !(vel.y < 0) && !onAir) {
-      onAir = false;
-    }else
-      onAir = true;
     
-    if(!onAir){
-      vel.y += 150;
+    //Si se pulsa space y no estamos en el aire, saltamos
+    if(keys[32] && !onAir){
+      //estamos en el aire
+      onAir=true;
+      //keys[32]=false; //Si lo descomentamos habrá que pulsar espacio cada vez que queramos saltar
+      vel.y += 500;
       body.applyLinearImpulse(vel, body.getWorldCenter(), true);
     }
     
-    if(vel.y >= 0 || vel.y <= 0.2)
+    //Hemos llegado a una superficie, no estamos en el aire
+    if(vel.y >= 0 && vel.y <= 0.2){
       onAir = false;
-    
+    }
     
   }
 }

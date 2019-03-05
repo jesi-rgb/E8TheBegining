@@ -93,7 +93,7 @@ abstract class Personaje {
     //Define a fixture
     FixtureDef fd = new FixtureDef();
     fd.shape = boundingBox;
-    fd.density = 0.03;
+    fd.density = 1;
     fd.friction = 0.3;
     fd.restitution = 0.01;
 

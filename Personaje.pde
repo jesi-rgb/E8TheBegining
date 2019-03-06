@@ -19,16 +19,19 @@ abstract class Personaje {
   Body body; //Para el motor de físicas.
 
   //Pretty self explanatory constants.
-  final int NUM_SPRITES = 8;
-  final int VELOCITY_LIMIT = 8;
-  final int NUM_STATES = 3; //estados del personaje (saltar, correr dcha, izda, etc...)
+  int NUM_SPRITES;
+  int VELOCITY_LIMIT = 8;
+  int NUM_STATES; //estados del personaje (saltar, correr dcha, izda, etc...)
 
 
   /*
   Constructor del personaje. Se le pasa un vector posición para indicar
    la posición en pantalla.
    */
-  Personaje(Vec2 center, String spriteDirectory) {
+  Personaje(Vec2 center, String spriteDirectory, int numSpr, int numSts) {
+
+    NUM_SPRITES = numSpr;
+    NUM_STATES = numSts;
 
     velocity = new Vec2(0, 0);
 
@@ -44,8 +47,10 @@ abstract class Personaje {
       sprites[LEFT][i] = loadImage("media/"+spriteDirectory+"/"+LEFT+"/spr"+(i+1)+".png");
       sprites[RIGHT][i] = loadImage("media/"+spriteDirectory+"/"+RIGHT+"/spr"+(i+1)+".png");
     }
-    sprites[2][0] = loadImage("media/"+spriteDirectory+"/jump/jump0.png");
-    sprites[2][1] = loadImage("media/"+spriteDirectory+"/jump/jump1.png");
+    if (NUM_STATES == 3) {
+      sprites[2][0] = loadImage("media/"+spriteDirectory+"/jump/jump0.png");
+      sprites[2][1] = loadImage("media/"+spriteDirectory+"/jump/jump1.png");
+    }
 
     makeBody(center);
     body.setUserData(this);

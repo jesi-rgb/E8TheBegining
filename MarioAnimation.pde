@@ -12,9 +12,9 @@ final static int LEFT = 0, RIGHT = 1;
 Box2DProcessing box2d;
 Suelo s;
 Suelo[] pared = new Suelo[2];
-Suelo[] plataformas = new Suelo[4];
 
 Jugador jug;
+Enemigo enmy;
 Boolean[] keys;
 
 void setup() {
@@ -33,11 +33,11 @@ void setup() {
   }
 
 
-  jug = new Jugador(new Vec2(width/2, height/2), "jugador");
+  jug = new Jugador(new Vec2(width/2, height/2), "jugador", 8, 3);
+  enmy = new Enemigo(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2);
   s = new Suelo(width/2, height-50, width, 50);
   pared[0] = new Suelo(0, height/2, 30, height*100);
   pared[1] = new Suelo(width, height/2, 30, height*100);
-  plataformas[0] = new Suelo(width/2, 4*height/5, 100, 20);
 }
 
 void draw() {
@@ -45,16 +45,17 @@ void draw() {
   box2d.step();
 
   jug.mover();
-
   jug.jump();
   jug.display();
+  
+  enmy.mover();
+  enmy.display();
 
 
   s.display();
   //pared.move();
   pared[0].display();
   pared[1].display();
-  plataformas[0].display();
 }
 
 void keyPressed() {

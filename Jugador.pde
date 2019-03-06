@@ -1,8 +1,8 @@
 class Jugador extends Personaje {
 
 
-  Jugador(Vec2 center, String spriteDirectory) {
-    super(center, spriteDirectory);
+  Jugador(Vec2 center, String spriteDirectory, int numSpr, int numSts) {
+    super(center, spriteDirectory, numSpr, numSts);
   }
 
   void mover() {
@@ -49,7 +49,6 @@ class Jugador extends Personaje {
       vel.y += 500;
       body.applyLinearImpulse(vel, body.getWorldCenter(), true);
     }
-    println(vel.y);
     //Hemos llegado a una superficie, no estamos en el aire
     if(vel.y >= 0 && vel.y <= 0.116){
       onAir = false;

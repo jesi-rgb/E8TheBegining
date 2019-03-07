@@ -45,12 +45,12 @@ class Jugador extends Personaje {
     if(keys[32] && !onAir){
       //estamos en el aire
       onAir=true;
-      //keys[32]=false; //Si lo descomentamos habrá que pulsar espacio cada vez que queramos saltar
+      keys[32]=false; //Si lo descomentamos habrá que pulsar espacio cada vez que queramos saltar
       vel.y += 500;
       body.applyLinearImpulse(vel, body.getWorldCenter(), true);
     }
     //Hemos llegado a una superficie, no estamos en el aire
-    if(vel.y >= 0 && vel.y <= 0.116){
+    if(vel.y >= 0 && vel.y <= 0.3){
       onAir = false;
     }
     

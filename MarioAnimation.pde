@@ -12,6 +12,7 @@ final static int LEFT = 0, RIGHT = 1;
 Box2DProcessing box2d;
 Suelo s;
 Suelo[] pared = new Suelo[2];
+Plataforma[] plataformas = new Plataforma[4];
 
 Jugador jug;
 Enemigo enmy;
@@ -38,6 +39,8 @@ void setup() {
   s = new Suelo(width/2, height-50, width, 50);
   pared[0] = new Suelo(0, height/2, 30, height*100);
   pared[1] = new Suelo(width, height/2, 30, height*100);
+  plataformas[0] = new Plataforma(width/2, 4*height/5, 300, 20, 1);
+  plataformas[1] = new Plataforma(3*width/4, 4*height/5, 100, 20, 1);
 }
 
 void draw() {
@@ -56,6 +59,10 @@ void draw() {
   //pared.move();
   pared[0].display();
   pared[1].display();
+  plataformas[0].display();
+  plataformas[1].display();
+  plataformas[0].move(0, 100);
+  plataformas[1].move(1, 50);
 }
 
 void keyPressed() {

@@ -55,16 +55,4 @@ class Suelo {
     rectMode(CENTER);
     rect(pos.x, pos.y, w, h);
   }
-
-  void move() {
-    if (frameCount%40 == 0) {
-      Vec2 vel = b.getLinearVelocity();
-      if (xd)
-        vel.x += 10;
-      else
-        vel.x -=10;
-      b.setLinearVelocity(vel);
-      println('2');
-    }
-  }
 }

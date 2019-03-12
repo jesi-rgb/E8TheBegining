@@ -15,12 +15,11 @@ class Enemigo extends Personaje {
     
     if (pMovimiento < umbralMovimiento) {
       vel.x += random(-1000, 0);
-      println("FUUUCK"+vel.x);
       body.setLinearVelocity(vel);
       inMotion = true;
     }
-    println(vel.x);
-    if (diff < 0.003)
+
+    if (diff < 0.03)
       currentDirection = LEFT;
     else
       currentDirection = RIGHT;

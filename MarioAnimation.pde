@@ -49,9 +49,9 @@ void draw() {
   box2d.step(1/( frameRate * 2), 10, 10);
 
 
-  //jug.mover();
-  //jug.jump();
-  //jug.display();
+  jug.mover();
+  jug.jump();
+  jug.display();
 
   enmy.mover();
   enmy.display();
@@ -61,10 +61,10 @@ void draw() {
   //pared.move();
   pared[0].display();
   pared[1].display();
-  //plataformas[0].display();
+  plataformas[0].display();
   //plataformas[1].display();
 
-  //plataformas[0].move(1, 100);
+  plataformas[0].move(1, 100);
   //plataformas[1].move(1, 50);
 }
 

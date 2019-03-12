@@ -44,7 +44,7 @@ class Jugador extends Personaje {
     float diff =  vel.y - preVelY;
     println(abs(diff));
     
-    if(abs(diff)>0.3){
+    if(abs(diff)>3){
       onAir=true;
     } else onAir = false;
     

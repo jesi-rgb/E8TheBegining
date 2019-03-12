@@ -19,6 +19,7 @@ abstract class Personaje {
   Body body; //Para el motor de físicas.
 
   //Pretty self explanatory constants.
+  String sprDir;
   int NUM_SPRITES;
   int VELOCITY_LIMIT = 8;
   int NUM_STATES; //estados del personaje (saltar, correr dcha, izda, etc...)
@@ -32,6 +33,8 @@ abstract class Personaje {
 
     NUM_SPRITES = numSpr;
     NUM_STATES = numSts;
+    
+    sprDir = spriteDirectory;
 
     velocity = new Vec2(0, 0);
 
@@ -102,6 +105,7 @@ abstract class Personaje {
 
     //Define a fixture
     FixtureDef fd = new FixtureDef();
+    fd.setUserData(sprDir);
     fd.shape = boundingBox;
     fd.density = 1;
     fd.friction = 0.3;

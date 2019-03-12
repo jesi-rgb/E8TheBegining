@@ -44,6 +44,7 @@ class Plataforma {
     b = box2d.createBody(bd);
 
     FixtureDef fd = new FixtureDef();
+    fd.setUserData("plataforma");
     fd.shape = sd;
     fd.friction = friction;
 

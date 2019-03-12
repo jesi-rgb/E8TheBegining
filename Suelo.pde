@@ -41,6 +41,7 @@ class Suelo {
 
     FixtureDef fd = new FixtureDef();
     fd.shape = sd;
+    fd.setUserData("suelo");
 
     b.createFixture(fd);
     b.resetMassData();

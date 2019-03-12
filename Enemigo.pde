@@ -15,9 +15,6 @@ class Enemigo extends Personaje {
     else
       currentDirection = RIGHT;
       
-    
-    println(vel.x+" "+this.inMotion);
-
     body.setLinearVelocity(vel);
   }
 }

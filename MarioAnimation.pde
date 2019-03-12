@@ -2,7 +2,6 @@ import shiffman.box2d.*;
 import org.jbox2d.common.*;
 import org.jbox2d.dynamics.joints.*;
 import org.jbox2d.collision.shapes.*;
-import org.jbox2d.collision.shapes.Shape;
 import org.jbox2d.common.*;
 import org.jbox2d.dynamics.*;
 import org.jbox2d.dynamics.contacts.*;
@@ -23,6 +22,8 @@ void setup() {
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
   box2d.setGravity(0, -700);
+  //box2d.listenForCollisions();
+
 
 
   frameRate(40);
@@ -35,24 +36,25 @@ void setup() {
 
 
   jug = new Jugador(new Vec2(width/2, height/2), "jugador", 8, 3);
-  enmy = new Enemigo(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2);
+  //enmy = new Enemigo(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2);
   s = new Suelo(width/2, height-50, width, 50);
   pared[0] = new Suelo(0, height/2, 30, height*100);
   pared[1] = new Suelo(width, height/2, 30, height*100);
   plataformas[0] = new Plataforma(width/2, 4*height/5, 300, 20, 1);
-  plataformas[1] = new Plataforma(3*width/4, 4*height/5, 100, 20, 1);
+  //plataformas[1] = new Plataforma(3*width/4, 4*height/5, 200, 20, 1);
 }
 
 void draw() {
   background(140, 200, 0);
-  box2d.step();
+  box2d.step(1/( frameRate * 2), 10, 10);
+
 
   jug.mover();
   jug.jump();
   jug.display();
-  
-  enmy.mover();
-  enmy.display();
+
+  //enmy.mover();
+  //enmy.display();
 
 
   s.display();
@@ -60,10 +62,30 @@ void draw() {
   pared[0].display();
   pared[1].display();
   plataformas[0].display();
-  plataformas[1].display();
-  plataformas[0].move(0, 100);
-  plataformas[1].move(1, 50);
+  //plataformas[1].display();
+
+  plataformas[0].move(1, 100);
+  //plataformas[1].move(1, 50);
 }
+
+
+//void beginContact(Contact cp) {
+//  // Get both fixtures
+//  Fixture f1 = cp.getFixtureA();
+//  Fixture f2 = cp.getFixtureB();
+
+//  if(f1.getUserData().equals("jugador")){
+//    jug = (Jugador)f1.getBody().getUserData();
+//    jug.onAir = false;
+//  }else{
+//    jug = (Jugador)f2.getBody().getUserData();
+//    jug.onAir = false;
+//  }
+//}
+
+//// Objects stop touching each other
+//void endContact(Contact cp) {
+//}
 
 void keyPressed() {
   keys[keyCode] = true;

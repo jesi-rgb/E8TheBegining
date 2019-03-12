@@ -18,7 +18,8 @@ Enemigo enmy;
 Boolean[] keys;
 
 void setup() {
-  size(840, 900, P2D);
+  fullScreen();
+  //size(840, 900, P2D);
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
   box2d.setGravity(0, -700);
@@ -40,7 +41,7 @@ void setup() {
   s = new Suelo(width/2, height-50, width, 50);
   pared[0] = new Suelo(0, height/2, 30, height*100);
   pared[1] = new Suelo(width, height/2, 30, height*100);
-  plataformas[0] = new Plataforma(width/2, 4*height/5, 300, 20, 1);
+  //plataformas[0] = new Plataforma(width/2, 4*height/5, 300, 20, 1);
   //plataformas[1] = new Plataforma(3*width/4, 4*height/5, 200, 20, 1);
 }
 
@@ -49,9 +50,9 @@ void draw() {
   box2d.step(1/( frameRate * 2), 10, 10);
 
 
-  jug.mover();
-  jug.jump();
-  jug.display();
+  //jug.mover();
+  //jug.jump();
+  //jug.display();
 
   enmy.mover();
   enmy.display();
@@ -61,10 +62,10 @@ void draw() {
   //pared.move();
   pared[0].display();
   pared[1].display();
-  plataformas[0].display();
+  //plataformas[0].display();
   //plataformas[1].display();
 
-  plataformas[0].move(1, 100);
+  //plataformas[0].move(1, 100);
   //plataformas[1].move(1, 50);
 }
 

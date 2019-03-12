@@ -1,20 +1,30 @@
 class Enemigo extends Personaje {
 
+  float umbralMovimiento = 0.00005;
+  float preVel;
   Enemigo(Vec2 center, String spriteDirectory, int numSpr, int numSts) {
     super(center, spriteDirectory, numSpr, numSts);
+    preVel = body.getLinearVelocity().x;
+    println(body.getLinearVelocity().x);
   }
 
   void mover() {
     Vec2 vel = body.getLinearVelocity();
-
-    vel.x += random(-50, 50);
-    inMotion = true;
+    float diff = vel.x - preVel;
+    float pMovimiento = random(1);
     
-    if(vel.x < 0)
+    if (pMovimiento < umbralMovimiento) {
+      vel.x += random(-1000, 0);
+      println("FUUUCK"+vel.x);
+      body.setLinearVelocity(vel);
+      inMotion = true;
+    }
+    println(vel.x);
+    if (diff < 0.003)
       currentDirection = LEFT;
     else
       currentDirection = RIGHT;
-      
-    body.setLinearVelocity(vel);
+
+    preVel = body.getLinearVelocity().x;
   }
 }

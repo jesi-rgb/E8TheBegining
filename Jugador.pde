@@ -1,9 +1,9 @@
 class Jugador extends Personaje {
-  Vec2 prevVel;
+  float preVelY;
 
   Jugador(Vec2 center, String spriteDirectory, int numSpr, int numSts) {
     super(center, spriteDirectory, numSpr, numSts);
-    prevVel = body.getLinearVelocity();
+    preVelY = body.getLinearVelocity().y;
   }
 
   void mover() {
@@ -41,7 +41,12 @@ class Jugador extends Personaje {
 
   void jump() {
     Vec2 vel = body.getLinearVelocity();
-    float diff =  vel.y - prevVel.y;
+    float diff =  vel.y - preVelY;
+    println(abs(diff));
+    
+    if(abs(diff)>0.3){
+      onAir=true;
+    } else onAir = false;
     
     //Si se pulsa space y no estamos en el aire, saltamos
     if(keys[32] && !onAir){
@@ -51,13 +56,7 @@ class Jugador extends Personaje {
       vel.y += 500;
       body.applyLinearImpulse(vel, body.getWorldCenter(), true);
     }
-    //Hemos llegado a una superficie, no estamos en el aire
     
-    //println(vel.y +" - "+prevVel.y+" = "+diff);
-    
-    if(diff >= 0 && diff <= 0.03){
-      onAir = false;
-    }
-    
+    preVelY = body.getLinearVelocity().y;
   }
 }

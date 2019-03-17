@@ -1,4 +1,4 @@
-  // The Nature of Code
+// The Nature of Code
 // <http://www.shiffman.net/teaching/nature>
 // Spring 2012
 // Box2DProcessing example
@@ -65,23 +65,23 @@ class Plataforma {
   void move(int direccion, int len) {
     Vec2 vel = b.getLinearVelocity();
     Vec2 pos = box2d.getBodyPixelCoord(b);
-    if(direccion==0){
-      if(sentido){
-        if(pos.x<(xInicial+len)){
+    if (direccion==0) {
+      if (sentido) {
+        if (pos.x<(xInicial+len)) {
           vel.x = 10;
         } else sentido=false;
       } else {
-        if(pos.x>(xInicial-len)){
+        if (pos.x>(xInicial-len)) {
           vel.x = -10;
         } else sentido=true;
       }
     } else {
-      if(sentido){
-        if(pos.y>(yInicial-len)){
+      if (sentido) {
+        if (pos.y>(yInicial-len)) {
           vel.y = 10;
         } else sentido=false;
       } else {
-        if(pos.y<(yInicial+len)){
+        if (pos.y<(yInicial+len)) {
           vel.y = -10;
         } else sentido=true;
       }

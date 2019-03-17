@@ -14,18 +14,17 @@ Suelo[] pared = new Suelo[2];
 Plataforma[] plataformas = new Plataforma[4];
 
 Jugador jug;
+Vec2 jugPos;
 Enemigo enmy;
 Boolean[] keys;
 
 void setup() {
-  fullScreen();
-  //size(840, 900, P2D);
+  //fullScreen();
+  size(840, 900, P2D);
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
   box2d.setGravity(0, -700);
   //box2d.listenForCollisions();
-
-
 
   frameRate(40);
   imageMode(CENTER);
@@ -34,7 +33,6 @@ void setup() {
   for (int i=0; i<keys.length; i++) {
     keys[i] = false;
   }
-
 
   jug = new Jugador(new Vec2(width/2, height/2), "jugador", 8, 3);
   enmy = new Enemigo(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2);
@@ -50,11 +48,12 @@ void draw() {
   box2d.step(1/( frameRate * 2), 10, 10);
 
 
-  //jug.mover();
-  //jug.jump();
-  //jug.display();
+  jug.mover();
+  jug.jump();
+  jug.display();
 
-  enmy.mover();
+  jugPos = box2d.getBodyPixelCoord(jug.body);
+  enmy.detectarJugador(jugPos);
   enmy.display();
 
 

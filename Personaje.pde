@@ -33,7 +33,7 @@ abstract class Personaje {
 
     NUM_SPRITES = numSpr;
     NUM_STATES = numSts;
-    
+
     sprDir = spriteDirectory;
 
     velocity = new Vec2(0, 0);
@@ -101,6 +101,7 @@ abstract class Personaje {
     PolygonShape boundingBox = new PolygonShape();
     float box2dw = box2d.scalarPixelsToWorld(sprites[RIGHT][0].width/2);
     float box2dh = box2d.scalarPixelsToWorld(sprites[RIGHT][0].height/2);
+    println(sprDir+" WIDTH: "+box2dw+ " HEIGHT: "+box2dh);
     boundingBox.setAsBox(box2dw, box2dh);
 
     //Define a fixture

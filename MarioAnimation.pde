@@ -19,8 +19,8 @@ Enemigo enmy;
 Boolean[] keys;
 
 void setup() {
-  //fullScreen();
-  size(840, 900, P2D);
+  fullScreen();
+  //size(840, 900, P2D);
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
   box2d.setGravity(0, -700);

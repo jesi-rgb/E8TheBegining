@@ -9,18 +9,22 @@ import org.jbox2d.dynamics.contacts.*;
 final static int LEFT = 0, RIGHT = 1;
 
 Box2DProcessing box2d;
-Suelo s;
-Suelo[] pared = new Suelo[2];
+
+Terreno s;
+Terreno[] pared = new Terreno[2];
 Plataforma[] plataformas = new Plataforma[4];
 
 Jugador jug;
 Vec2 jugPos;
 Enemigo enmy;
+
+PImage bg; 
+
 Boolean[] keys;
 
 void setup() {
-  fullScreen();
-  //size(840, 900, P2D);
+  fullScreen(P2D);
+  //size(1920, 1080, P2D);
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
   box2d.setGravity(0, -700);
@@ -29,6 +33,8 @@ void setup() {
   frameRate(40);
   imageMode(CENTER);
 
+  bg = loadImage("media/backgrounds/background.jpg");
+
   keys = new Boolean[128];
   for (int i=0; i<keys.length; i++) {
     keys[i] = false;
@@ -36,17 +42,17 @@ void setup() {
 
   jug = new Jugador(new Vec2(width/2, height/2), "jugador", 8, 3);
   enmy = new Enemigo(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2);
-  s = new Suelo(width/2, height-50, width, 50);
-  pared[0] = new Suelo(0, height/2, 30, height*100);
-  pared[1] = new Suelo(width, height/2, 30, height*100);
+  s = new Terreno(width/2, height-50, width, 50, "floor");
+  pared[0] = new Terreno(0, height/2, 30, height*100, "floor");
+  pared[1] = new Terreno(width, height/2, 30, height*100, "floor");
   //plataformas[0] = new Plataforma(width/2, 4*height/5, 300, 20, 1);
   //plataformas[1] = new Plataforma(3*width/4, 4*height/5, 200, 20, 1);
 }
 
 void draw() {
-  background(140, 200, 0);
-  box2d.step(1/( frameRate * 2), 10, 10);
-
+  background(bg);
+  box2d.step(1/(frameRate * 2), 10, 10);
+  
 
   jug.mover();
   jug.jump();

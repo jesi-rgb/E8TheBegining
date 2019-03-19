@@ -5,7 +5,7 @@
 
 // A fixed boundary class
 
-class Suelo {
+class Terreno {
 
   // A boundary is a simple rectangle with x,y,width,and height
   float x;
@@ -13,17 +13,23 @@ class Suelo {
   float w;
   float h;
   Boolean xd;
+  PImage texture;
 
   // But we also have to make a body for box2d to know about it
   Body b;
 
-  Suelo(float x_, float y_, float w_, float h_) {
+  Terreno(float x_, float y_, float w_, float h_, String ruta) {
     x = x_;
     y = y_;
     w = w_;
     h = h_;
     xd = true;
+    texture = loadImage("media/backgrounds/"+ruta+".png");
+    makeBody();
+  }
 
+  
+  void makeBody(){
     // Define the polygon
     PolygonShape sd = new PolygonShape();
     // Figure out the box2d coordinates
@@ -47,13 +53,13 @@ class Suelo {
     b.resetMassData();
   }
 
-  // Draw the boundary, if it were at an angle we'd have to do something fancier
   void display() {
-    Vec2 pos = box2d.getBodyPixelCoord(b);
-
-    fill(0);
-    stroke(0);
-    rectMode(CENTER);
-    rect(pos.x, pos.y, w, h);
+    beginShape();
+    texture(texture);
+    vertex(x-w/2, y+h/2, 0, 0);
+    vertex(x-w/2, y-h/2, 1000, 0);
+    vertex(x+w/2, y-h/2, 1000, 1000);
+    vertex(x+w/2, y+h/2, 1000, 0);
+    endShape();
   }
 }

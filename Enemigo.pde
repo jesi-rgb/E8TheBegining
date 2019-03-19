@@ -4,8 +4,8 @@ class Enemigo extends Personaje {
   float umbralParada = 0.8;
   float preVel;
   boolean moviendo;
-  int ANCHO_VISION = 400;
-  final int ALTO_VISION = 200;
+  int ANCHO_VISION = 1000;
+  final int ALTO_VISION = 500;
 
   Enemigo(Vec2 center, String spriteDirectory, int numSpr, int numSts) {
     super(center, spriteDirectory, numSpr, numSts);
@@ -59,12 +59,12 @@ class Enemigo extends Personaje {
 
     if (jugPos.x > (pos.x - ANCHO_VISION/2) && jugPos.x < pos.x) {
       currentDirection = LEFT;
-      vel.x -= 3;
+      vel.x -= 5;
     }
     
     if (jugPos.x < (pos.x + ANCHO_VISION/2) && jugPos.x > pos.x) {
       currentDirection = RIGHT;
-      vel.x += 3;
+      vel.x += 5;
     }
 
     body.setLinearVelocity(vel);
@@ -76,15 +76,17 @@ class Enemigo extends Personaje {
     rectMode(CENTER);
     Vec2 pos = box2d.getBodyPixelCoord(this.body);
 
-    if ( (jugPos.x > (pos.x - ANCHO_VISION/2)) && (jugPos.x < (pos.x + ANCHO_VISION/2)) ) {
+    if ( (jugPos.x > (pos.x - ANCHO_VISION/2)) && (jugPos.x < (pos.x + ANCHO_VISION/2)) &&
+         (jugPos.y > (pos.y - ALTO_VISION/2)) && (jugPos.y < (pos.y + ALTO_VISION/2))
+    ) {
       fill(250, 10, 10, 80); //rojo, jugador dentro de campo de visión. nos movemos hacia él
-      ANCHO_VISION = 800;
+      ANCHO_VISION = 1300;
       moverHaciaJugador(jugPos);
     } else {
-      fill(10, 10, 250, 80); //azul, no hay moros en la costa
-      ANCHO_VISION = 400;
+      fill(10, 10, 250, 80); //azul, no hay vergas en la costa
+      ANCHO_VISION = 1000;
       mover();
     }
-    rect(pos.x, pos.y, ANCHO_VISION, ALTO_VISION); //cuadrado de debuggeo para ayudar a visualizar
+    //rect(pos.x, pos.y, ANCHO_VISION, ALTO_VISION); //cuadrado de debuggeo para ayudar a visualizar
   }
 }

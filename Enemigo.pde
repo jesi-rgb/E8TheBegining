@@ -1,52 +1,20 @@
-class Enemigo extends Personaje {
+abstract class Enemigo extends Personaje {
 
-  float umbralMovimiento = 0.98;
-  float umbralParada = 0.8;
+  float umbralMovimiento;
+  float umbralParada;
   float preVel;
   boolean moviendo;
-  int ANCHO_VISION = 1000;
-  final int ALTO_VISION = 500;
+  int ANCHO_VISION;
+  int ALTO_VISION;
 
-  Enemigo(Vec2 center, String spriteDirectory, int numSpr, int numSts) {
-    super(center, spriteDirectory, numSpr, numSts);
+  Enemigo(Vec2 center, String spriteDirectory, int numSpr, int numSts, float density) {
+    super(center, spriteDirectory, numSpr, numSts, density);
     preVel = body.getLinearVelocity().x;
     inMotion = false;
     moviendo = false;
   }
 
-  void mover() {
-    float diff = body.getLinearVelocity().x - preVel;
-    if (abs(diff) < 0.3) {
-      inMotion = false;
-    } else inMotion = true;
-
-    float alfa;
-    if (!moviendo) {
-      alfa = random(1);
-      if (alfa>umbralMovimiento) {
-        moviendo=true;
-      }
-    }
-
-    if (moviendo) {
-      Vec2 vel = body.getLinearVelocity();
-
-      if (currentDirection == LEFT) {
-        vel.x += random(-10, -3);
-      } else vel.x += random(3, 10);
-
-      body.setLinearVelocity(vel);
-
-      alfa = random(1);
-      if (alfa > umbralParada) {
-        moviendo = false;
-        alfa = random(1);
-        if (alfa > 0.75) currentDirection = (currentDirection + 1)%2;
-      }
-
-      preVel = body.getLinearVelocity().x;
-    }
-  }
+  abstract void mover();
 
   void moverHaciaJugador(Vec2 jugPos) {
     Vec2 vel = body.getLinearVelocity();

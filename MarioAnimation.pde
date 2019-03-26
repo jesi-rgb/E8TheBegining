@@ -23,8 +23,8 @@ PImage bg;
 Boolean[] keys;
 
 void setup() {
-  fullScreen(P2D);
-  //size(1920, 1080, P2D);
+  //fullScreen(P2D);
+  size(1300, 700, P2D);
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
   box2d.setGravity(0, -700);
@@ -33,15 +33,16 @@ void setup() {
   frameRate(40);
   imageMode(CENTER);
 
-  bg = loadImage("media/backgrounds/background.jpg");
+  //bg = loadImage("media/backgrounds/background.jpg");
 
   keys = new Boolean[128];
   for (int i=0; i<keys.length; i++) {
     keys[i] = false;
   }
 
-  jug = new Jugador(new Vec2(width/2, height/2), "jugador", 8, 3);
-  enmy = new Enemigo(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2);
+  jug = new Jugador(new Vec2(width/2, height/2), "jugador", 8, 3, 1);
+  //enmy = new Imagen(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2, 1);
+  enmy = new Audio(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2, 0.1);
   s = new Terreno(width/2, height-50, width, 50, "floor");
   pared[0] = new Terreno(0, height/2, 30, height*100, "floor");
   pared[1] = new Terreno(width, height/2, 30, height*100, "floor");
@@ -50,7 +51,8 @@ void setup() {
 }
 
 void draw() {
-  background(bg);
+  //background(bg);
+  background(150);
   box2d.step(1/(frameRate * 2), 10, 10);
   
 
@@ -59,7 +61,8 @@ void draw() {
   jug.display();
 
   jugPos = box2d.getBodyPixelCoord(jug.body);
-  enmy.detectarJugador(jugPos);
+  //enmy.detectarJugador(jugPos);
+  enmy.mover();
   enmy.display();
 
 

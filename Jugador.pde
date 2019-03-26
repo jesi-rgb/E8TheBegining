@@ -1,8 +1,8 @@
 class Jugador extends Personaje {
   float preVelY;
 
-  Jugador(Vec2 center, String spriteDirectory, int numSpr, int numSts) {
-    super(center, spriteDirectory, numSpr, numSts);
+  Jugador(Vec2 center, String spriteDirectory, int numSpr, int numSts, float density) {
+    super(center, spriteDirectory, numSpr, numSts, density);
     preVelY = body.getLinearVelocity().y;
   }
 

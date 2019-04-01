@@ -40,9 +40,9 @@ void setup() {
     keys[i] = false;
   }
 
-  jug = new Jugador(new Vec2(width/2, height/2), "jugador", 8, 3, 1);
-  //enmy = new Imagen(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2, 1);
-  enmy = new Audio(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2, 0.1);
+  //jug = new Jugador(new Vec2(width/2, height/2), "jugador", 8, 3, true);
+  //enmy = new Imagen(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2, true);
+  enmy = new Audio(new Vec2(width/2, 3*height/4), "imgEnemy", 8, 2, false);
   s = new Terreno(width/2, height-50, width, 50, "floor");
   pared[0] = new Terreno(0, height/2, 30, height*100, "floor");
   pared[1] = new Terreno(width, height/2, 30, height*100, "floor");
@@ -56,11 +56,11 @@ void draw() {
   box2d.step(1/(frameRate * 2), 10, 10);
   
 
-  jug.mover();
-  jug.jump();
-  jug.display();
+  //jug.mover();
+  //jug.jump();
+  //jug.display();
 
-  jugPos = box2d.getBodyPixelCoord(jug.body);
+  //jugPos = box2d.getBodyPixelCoord(jug.body);
   //enmy.detectarJugador(jugPos);
   enmy.mover();
   enmy.display();

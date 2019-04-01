@@ -7,8 +7,8 @@ abstract class Enemigo extends Personaje {
   int ANCHO_VISION;
   int ALTO_VISION;
 
-  Enemigo(Vec2 center, String spriteDirectory, int numSpr, int numSts, float density) {
-    super(center, spriteDirectory, numSpr, numSts, density);
+  Enemigo(Vec2 center, String spriteDirectory, int numSpr, int numSts, boolean dynamic) {
+    super(center, spriteDirectory, numSpr, numSts, dynamic);
     preVel = body.getLinearVelocity().x;
     inMotion = false;
     moviendo = false;

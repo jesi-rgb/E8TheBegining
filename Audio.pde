@@ -7,6 +7,7 @@ class Audio extends Enemigo{
   float wX;
   float wY;
   int a;
+  float dist;
   Vec2 vel;
   
   Audio(Vec2 center, String spriteDirectory, int numSpr, int numSts, boolean flotante){
@@ -22,6 +23,7 @@ class Audio extends Enemigo{
     xInicial = center.x;
     yInicial = center.y;
     a = 0;
+    dist = 100;
     vel = new Vec2(0,0);
   }
   
@@ -33,15 +35,29 @@ class Audio extends Enemigo{
       if (abs(diff) < 0.3) {
         inMotion = false;
       } else inMotion = true;
-  
-      if (abs(jugPos.x-pos.x) < 800 && jugPos.x < pos.x) {
-        currentDirection = RIGHT;
-        vel.x += 5;
-      }
       
-      if (abs(jugPos.x-pos.x) < 800 && jugPos.x > pos.x) {
+      float distancia;
+      
+      if(jugPos.x<pos.x){
+        currentDirection = RIGHT;
+        distancia = pos.x - jugPos.x;
+        if(distancia<dist){
+          vel.x += 5;
+        } else {
+          if(distancia>dist){
+            vel.x -= 5;
+          } else vel.x = wX * ampX * cos(wX * a);
+        }
+      } else {
         currentDirection = LEFT;
-        vel.x -= 5;
+        distancia = jugPos.x - pos.x;
+        if(distancia<dist){
+          vel.x -= 5;
+        } else {
+          if(distancia>dist){
+            vel.x += 5;
+          } else vel.x = wX * ampX * cos(wX * a);
+        }
       }
   
       body.setLinearVelocity(vel);
@@ -50,16 +66,16 @@ class Audio extends Enemigo{
     } else {
       vel.x = wX * ampX * cos(wX * a);
       body.setLinearVelocity(vel);
+      inMotion = true;
+      if(vel.x > 0)
+        currentDirection = LEFT;
+      else
+        currentDirection = RIGHT;
     }
     vel.y = wY * ampY * sin(wY * a);
-    body.setLinearVelocity(vel);
-    inMotion = true;
-    if(vel.x > 0)
-      currentDirection = LEFT;
-    else
-      currentDirection = RIGHT;
-      
+    body.setLinearVelocity(vel);   
     a++;
+    
     if(random(1) < 0.95)
       currentFrame--;
     

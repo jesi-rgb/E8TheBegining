@@ -24,7 +24,7 @@ Boolean[] keys;
 
 void setup() {
   fullScreen(P2D);
-  //size(1920, 1080, P2D);
+  //size(840, 640, P2D);
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
   box2d.setGravity(0, -700);
@@ -34,6 +34,7 @@ void setup() {
   imageMode(CENTER);
 
   bg = loadImage("media/backgrounds/background.jpg");
+  bg.resize(width, height); //para adaptar la imagen al tamaño de la pantalla.
 
   keys = new Boolean[128];
   for (int i=0; i<keys.length; i++) {

@@ -42,6 +42,8 @@ class Plataforma {
     bd.type = BodyType.KINEMATIC;
     bd.position.set(box2d.coordPixelsToWorld(x, y));
     b = box2d.createBody(bd);
+    
+    
 
     FixtureDef fd = new FixtureDef();
     fd.setUserData("plataforma");

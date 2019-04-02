@@ -29,6 +29,15 @@ class Audio extends Enemigo{
     vel.x = wX * ampX * cos(wX * a);
     vel.y = wY * ampY * sin(wY * a);
     body.setLinearVelocity(vel);
+    inMotion = true;
+    if(vel.x > 0)
+      currentDirection = LEFT;
+    else
+      currentDirection = RIGHT;
+      
     a++;
+    if(random(1) < 0.95)
+      currentFrame--;
+    
   }
 }

@@ -28,15 +28,14 @@ class Audio extends Enemigo{
   }
   
   void mover() {
+    inMotion = true;
+    float pFrames;
+    
     if(detectado){
-      Vec2 pos = box2d.getBodyPixelCoord(this.body);
-  
-      float diff = vel.x - preVel;
-      if (abs(diff) < 0.3) {
-        inMotion = false;
-      } else inMotion = true;
+      pFrames = 0.3;
       
-      float distancia;
+      Vec2 pos = box2d.getBodyPixelCoord(this.body);
+      float distancia;  
       
       if(jugPos.x<pos.x){
         currentDirection = RIGHT;
@@ -64,9 +63,9 @@ class Audio extends Enemigo{
       
       preVel = body.getLinearVelocity().x;
     } else {
+      pFrames = 0.90;
       vel.x = wX * ampX * cos(wX * a);
       body.setLinearVelocity(vel);
-      inMotion = true;
       if(vel.x > 0)
         currentDirection = LEFT;
       else
@@ -76,8 +75,8 @@ class Audio extends Enemigo{
     body.setLinearVelocity(vel);   
     a++;
     
-    if(random(1) < 0.95)
-      currentFrame--;
+    //if(random(1) < pFrames)
+    //  currentFrame--;
     
   }
 }

@@ -33,6 +33,6 @@ abstract class Enemigo extends Personaje {
       detectado = false;
     }
     mover();
-    rect(pos.x, pos.y, ANCHO_VISION, ALTO_VISION); //cuadrado de debuggeo para ayudar a visualizar
+    //rect(pos.x, pos.y, ANCHO_VISION, ALTO_VISION); //cuadrado de debuggeo para ayudar a visualizar
   }
 }

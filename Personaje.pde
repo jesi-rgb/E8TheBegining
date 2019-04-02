@@ -29,7 +29,7 @@ abstract class Personaje {
   Constructor del personaje. Se le pasa un vector posición para indicar
    la posición en pantalla.
    */
-  Personaje(Vec2 center, String spriteDirectory, int numSpr, int numSts, boolean dynamic) {
+  Personaje(Vec2 center, String spriteDirectory, int numSpr, int numSts, boolean flotante) {
 
     NUM_SPRITES = numSpr;
     NUM_STATES = numSts;
@@ -55,7 +55,7 @@ abstract class Personaje {
       sprites[2][1] = loadImage("media/"+spriteDirectory+"/jump/jump1.png");
     }
 
-    makeBody(center, dynamic);
+    makeBody(center, flotante);
     body.setUserData(this);
   }
 
@@ -88,12 +88,13 @@ abstract class Personaje {
 
   abstract void mover();
 
-  void makeBody(Vec2 center, boolean dynamic) {
+  void makeBody(Vec2 center, boolean flotante) {
     //Define a body
     BodyDef bd = new BodyDef();
-    if(dynamic){
-      bd.type = BodyType.DYNAMIC;
-    } else bd.type = BodyType.KINEMATIC;
+    bd.type = BodyType.DYNAMIC;
+    if(flotante){
+      bd.gravityScale = 0;
+    }
     bd.position = box2d.coordPixelsToWorld(center);
 
     //Make a body object out of that definition
@@ -118,4 +119,5 @@ abstract class Personaje {
     body.createFixture(fd);
     body.resetMassData();
   }
+  
 }

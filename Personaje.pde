@@ -76,7 +76,7 @@ abstract class Personaje {
       inMotion = false;
     if(takingDamage){
       tint(255, 0, 0, 127);
-    } else noTint();
+    }
     if (onAir) {
       image(sprites[2][currentDirection], pos.x, pos.y);
     } else
@@ -85,6 +85,7 @@ abstract class Personaje {
     } else {
       image(sprites[currentDirection][0], pos.x, pos.y);
     }
+    noTint();
   }
 
 

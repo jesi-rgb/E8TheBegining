@@ -126,16 +126,21 @@ void beginContact(Contact cp) {
   
   if(f2.getUserData().equals("bulletAnimation")){
     Bullet b = (Bullet) f2.getBody().getUserData();
-
-    if(!f1.getUserData().equals("suelo")){
-      if(!f1.getUserData().equals(b.personaje)){
-        Personaje e = (Personaje) f1.getBody().getUserData();
-        e.takingDamage = true;
-        e.takeDamage(b.damage);
-        println(f1.getBody().getUserData() + ": " + e.vidaActual);
-        b.delete();
+    
+    if(!f1.getUserData().equals(b.personaje)){
+      if(!f1.getUserData().equals("suelo")){
+        if(f1.getUserData().equals("bulletAnimation")){
+          Bullet b2 = (Bullet) f1.getBody().getUserData();
+          b2.delete();
+        } else {
+          Personaje e = (Personaje) f1.getBody().getUserData();
+          e.takingDamage = true;
+          e.takeDamage(b.damage);
+          println(f1.getBody().getUserData() + ": " + e.vidaActual);
+        }
       }
-    } else b.delete();
+      b.delete();
+    }
   }
   
 
@@ -143,9 +148,6 @@ void beginContact(Contact cp) {
 
 // Objects stop touching each other
 void endContact(Contact cp) {
-  Fixture f1 = cp.getFixtureA();
-  Personaje p = (Personaje) f1.getBody().getUserData();
-  p.takingDamage = false;
 }
 
 void keyPressed() {

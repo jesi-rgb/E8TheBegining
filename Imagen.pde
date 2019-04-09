@@ -8,7 +8,7 @@ class Imagen extends Enemigo{
     ANCHO_VISION = 1000;
     ALTO_VISION = 500;
     
-    vidaMax = 20;
+    vidaMax = 500;
     vidaActual = vidaMax;
   }
   

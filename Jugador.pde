@@ -68,11 +68,11 @@ class Jugador extends Personaje {
       
       if(currentDirection == 0){
         pos.x -= sprWidth/2+10;
-        projectiles.add(new Bullet(pos, new Vec2(-10, 0)));
+        projectiles.add(new Bullet(pos, new Vec2(-10, 0), "jugador"));
       }
       else{
         pos.x += sprWidth/2+10;
-        projectiles.add(new Bullet(pos, new Vec2(10, 0)));
+        projectiles.add(new Bullet(pos, new Vec2(10, 0), "jugador"));
       }
     }
   }

@@ -64,15 +64,24 @@ void draw() {
   //background(150);
   box2d.step(1/(frameRate * 2), 10, 10);
   
-
+  //Jugador
   jug.mover();
   jug.jump();
   jug.display();
   jug.shoot();
 
   jugPos = box2d.getBodyPixelCoord(jug.body);
-  //imgEnemy.detectarJugador(jugPos);
-  imgEnemy.display();
+  
+  //Enemigos
+  if(imgEnemy != null){
+    if(imgEnemy.vidaActual>0){
+      //imgEnemy.detectarJugador(jugPos);
+      imgEnemy.display();
+    } else {
+      imgEnemy.killBody();
+      imgEnemy = null;
+    }
+  }
   
   //audEnemy.detectarJugador(jugPos);
   //audEnemy.display();
@@ -117,13 +126,16 @@ void beginContact(Contact cp) {
   
   if(f2.getUserData().equals("bulletAnimation")){
     Bullet b = (Bullet) f2.getBody().getUserData();
-    b.delete();
 
     if(!f1.getUserData().equals("suelo")){
-      Personaje e = (Personaje) f1.getBody().getUserData();
-      e.takeDamage(b.damage);
-      println(e.vidaActual);
-    }
+      if(!f1.getUserData().equals(b.personaje)){
+        Personaje e = (Personaje) f1.getBody().getUserData();
+        e.takingDamage = true;
+        e.takeDamage(b.damage);
+        println(f1.getBody().getUserData() + ": " + e.vidaActual);
+        b.delete();
+      }
+    } else b.delete();
   }
   
 
@@ -131,6 +143,9 @@ void beginContact(Contact cp) {
 
 // Objects stop touching each other
 void endContact(Contact cp) {
+  Fixture f1 = cp.getFixtureA();
+  Personaje p = (Personaje) f1.getBody().getUserData();
+  p.takingDamage = false;
 }
 
 void keyPressed() {

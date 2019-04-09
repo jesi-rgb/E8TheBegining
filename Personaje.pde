@@ -16,13 +16,13 @@ abstract class Personaje {
   
   int vidaMax;
   int vidaActual;
+  boolean takingDamage;
 
   Body body; //Para el motor de físicas.
 
   //Pretty self explanatory constants.
   String sprDir;
   int NUM_SPRITES;
-  int VELOCITY_LIMIT = 8;
   int NUM_STATES; //estados del personaje (saltar, correr dcha, izda, etc...)
 
 
@@ -45,6 +45,7 @@ abstract class Personaje {
     inMotion = false;
     onAir = false;
     currentDirection = RIGHT;
+    takingDamage = false;
     
     sprites = new PImage[NUM_STATES][NUM_SPRITES];
     for (int i=0; i<NUM_SPRITES; i++) {
@@ -60,8 +61,6 @@ abstract class Personaje {
     body.setUserData(this);
   }
 
-
-
   /*
    Función para pintar en pantalla el personaje.
    Dependiendo de si se mueve cogeremos un set de sprites
@@ -75,15 +74,17 @@ abstract class Personaje {
 
     if ( (vel.x > -4.5 && vel.x <= 0) || (vel.x < 4.5 && vel.x >= 0) )
       inMotion = false;
-
+    if(takingDamage){
+      tint(255, 0, 0, 127);
+    } else noTint();
     if (onAir) {
       image(sprites[2][currentDirection], pos.x, pos.y);
     } else
-      if (inMotion) {
-        image(sprites[currentDirection][1+int(currentFrame)], pos.x, pos.y);
-      } else {
-        image(sprites[currentDirection][0], pos.x, pos.y);
-      }
+    if (inMotion) {
+      image(sprites[currentDirection][1+int(currentFrame)], pos.x, pos.y);
+    } else {
+      image(sprites[currentDirection][0], pos.x, pos.y);
+    }
   }
 
 
@@ -124,9 +125,6 @@ abstract class Personaje {
   
   void takeDamage(int dmg){
     vidaActual -= dmg;
-    if(vidaActual <= 0){
-      killBody();
-    }
   }
   
   void killBody() {

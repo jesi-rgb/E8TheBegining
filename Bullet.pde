@@ -3,12 +3,14 @@ class Bullet extends Personaje{
   Vec2 direction;
   boolean delete;
   int damage;
+  String personaje;
   
-  Bullet(Vec2 origin, Vec2 dest){
+  Bullet(Vec2 origin, Vec2 dest, String pers){
     super(origin, "bulletAnimation", 9, 2, true);
     direction = dest;
     delete = false;
     damage = 10;
+    personaje = pers;
   }
   
   void mover(){
@@ -17,7 +19,7 @@ class Bullet extends Personaje{
       velocity.x -= 10;
       currentDirection = RIGHT;
     }else{
-      velocity.x +=10;
+      velocity.x += 10;
       currentDirection = LEFT;
     }
       

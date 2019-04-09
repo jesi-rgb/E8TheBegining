@@ -4,6 +4,8 @@ class Jugador extends Personaje {
   Jugador(Vec2 center, String spriteDirectory, int numSpr, int numSts, boolean flotante) {
     super(center, spriteDirectory, numSpr, numSts, flotante);
     preVelY = body.getLinearVelocity().y;
+    vidaMax = 100;
+    vidaActual = 100;
   }
 
   void mover() {

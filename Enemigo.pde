@@ -14,8 +14,6 @@ abstract class Enemigo extends Personaje {
     preVel = body.getLinearVelocity().x;
     inMotion = false;
     moviendo = false;
-    vidaMax = 10;
-    vidaActual = vidaMax;
   }
 
   abstract void mover();

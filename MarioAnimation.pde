@@ -104,13 +104,15 @@ void beginContact(Contact cp) {
 
   if((f1.getUserData().equals("jugador") && f2.getUserData().equals("imgEnemy")) ||
      (f2.getUserData().equals("jugador") && f1.getUserData().equals("imgEnemy")) ){
+       Personaje p;
     if(f1.getUserData().equals("jugador")){
-      println("me cago ne dios");
-      Personaje p = (Personaje) f1.getBody().getUserData();
-      p.takeDamage(10);
-      println(p.vidaActual);
+      p = (Personaje) f1.getBody().getUserData();
+    } else {
+      p = (Personaje) f2.getBody().getUserData();
     }
-   
+    
+    p.takeDamage(10);
+    println(p.vidaActual);
   }
   
   if(f2.getUserData().equals("bulletAnimation")){

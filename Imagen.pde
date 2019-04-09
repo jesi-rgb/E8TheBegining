@@ -8,7 +8,8 @@ class Imagen extends Enemigo{
     ANCHO_VISION = 1000;
     ALTO_VISION = 500;
     
-    body.setUserData(this);
+    vidaMax = 20;
+    vidaActual = 20;
   }
   
   void mover() {

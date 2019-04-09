@@ -31,8 +31,6 @@ class Audio extends Enemigo{
     dist = 100;
     
     vel = new Vec2(0,0);
-    
-    body.setUserData(this);
   }
   
   void mover() {

@@ -3,10 +3,8 @@ static enum State {
 }
 
 abstract class Personaje {
-
-  //Vec2 position; //Pretty self explanatory vectors.
+  
   Vec2 velocity;
-  //Vec2 acceleration;
 
   PImage[][] sprites; //Matriz para guardar los sprites.
 
@@ -15,6 +13,9 @@ abstract class Personaje {
   Boolean onAir;
   int currentDirection; //Nos dice la dirección hacia la que mira el personaje.
   float currentFrame; //Nos indica el sprite que estamos reproduciendo.
+  
+  int vidaMax;
+  int vidaActual;
 
   Body body; //Para el motor de físicas.
 
@@ -44,7 +45,7 @@ abstract class Personaje {
     inMotion = false;
     onAir = false;
     currentDirection = RIGHT;
-
+    
     sprites = new PImage[NUM_STATES][NUM_SPRITES];
     for (int i=0; i<NUM_SPRITES; i++) {
       sprites[LEFT][i] = loadImage("media/"+spriteDirectory+"/"+LEFT+"/spr"+(i+1)+".png");
@@ -99,12 +100,12 @@ abstract class Personaje {
 
     //Make a body object out of that definition
     body = box2d.createBody(bd);
+    body.setUserData(this);
 
     //Define the bounding box that is gonna experience all the forces
     PolygonShape boundingBox = new PolygonShape();
     float box2dw = box2d.scalarPixelsToWorld(sprites[RIGHT][0].width/2);
     float box2dh = box2d.scalarPixelsToWorld(sprites[RIGHT][0].height/2);
-    println(sprDir+" WIDTH: "+box2dw+ " HEIGHT: "+box2dh);
     boundingBox.setAsBox(box2dw, box2dh);
 
     //Define a fixture
@@ -118,6 +119,18 @@ abstract class Personaje {
     //Attach the fixture to the body
     body.createFixture(fd);
     body.resetMassData();
+  }
+  
+  
+  void takeDamage(int dmg){
+    vidaActual -= dmg;
+    if(vidaActual <= 0){
+      killBody();    
+    }
+  }
+  
+  void killBody() {
+    box2d.destroyBody(body);
   }
   
 }

@@ -8,11 +8,14 @@ abstract class Enemigo extends Personaje {
   int ALTO_VISION;
   boolean detectado;
 
+
   Enemigo(Vec2 center, String spriteDirectory, int numSpr, int numSts, boolean flotante) {
     super(center, spriteDirectory, numSpr, numSts, flotante);
     preVel = body.getLinearVelocity().x;
     inMotion = false;
     moviendo = false;
+    vidaMax = 10;
+    vidaActual = vidaMax;
   }
 
   abstract void mover();
@@ -35,4 +38,6 @@ abstract class Enemigo extends Personaje {
     mover();
     //rect(pos.x, pos.y, ANCHO_VISION, ALTO_VISION); //cuadrado de debuggeo para ayudar a visualizar
   }
+  
+  
 }

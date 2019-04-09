@@ -2,10 +2,13 @@ class Imagen extends Enemigo{
   
   Imagen(Vec2 center, String spriteDirectory, int numSpr, int numSts, boolean flotante){
     super(center, spriteDirectory, numSpr, numSts, flotante);
+    
     umbralMovimiento = 0.98;
     umbralParada = 0.8;
     ANCHO_VISION = 1000;
     ALTO_VISION = 500;
+    
+    body.setUserData(this);
   }
   
   void mover() {

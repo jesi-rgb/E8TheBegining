@@ -7,6 +7,10 @@ import org.jbox2d.dynamics.*;
 import org.jbox2d.dynamics.contacts.*;
 
 final static int LEFT = 0, RIGHT = 1;
+final static int LEFT_ARROW = 37;
+final static int UP_ARROW = 38;
+final static int RIGHT_ARROW = 39;
+final static int DOWN_ARROW = 40;
 
 Box2DProcessing box2d;
 
@@ -18,8 +22,9 @@ Jugador jug;
 Vec2 jugPos;
 Enemigo imgEnemy;
 Enemigo audEnemy;
+ArrayList<Bullet> projectiles;
 
-PImage bg; 
+PShape bg;
 
 Boolean[] keys;
 
@@ -27,27 +32,26 @@ void setup() {
 
   //fullScreen(P2D);
   size(1300, 700, P2D);
+  frameRate(40);
+  imageMode(CENTER);
 
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
   box2d.setGravity(0, -700);
-  //box2d.listenForCollisions();
+  box2d.listenForCollisions();
 
-  frameRate(40);
-  imageMode(CENTER);
-
-  bg = loadImage("media/backgrounds/background.jpg");
-  bg.resize(width, height); //para adaptar la imagen al tamaño de la pantalla.
-
-
-  keys = new Boolean[128];
+  bg = loadShape("media/backgrounds/trianglify.svg");
+  
+  keys = new Boolean[256];
   for (int i=0; i<keys.length; i++) {
     keys[i] = false;
   }
+  
+  projectiles = new ArrayList<Bullet>();
 
   jug = new Jugador(new Vec2(width/2, height/2), "jugador", 8, 3, false);
   imgEnemy = new Imagen(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2, false);
-  audEnemy = new Audio(new Vec2(3*width/4, 7*height/8), "audEnemy", 19, 2, true);
+  //audEnemy = new Audio(new Vec2(3*width/4, 7*height/8), "audEnemy", 19, 2, true);
   s = new Terreno(width/2, height-50, width, 50, "floor");
   pared[0] = new Terreno(0, height/2, 30, height*100, "floor");
   pared[1] = new Terreno(width, height/2, 30, height*100, "floor");
@@ -56,25 +60,33 @@ void setup() {
 }
 
 void draw() {
-  //background(bg);
-  background(150);
+  shape(bg);
+  //background(150);
   box2d.step(1/(frameRate * 2), 10, 10);
   
 
   jug.mover();
   jug.jump();
   jug.display();
+  jug.shoot();
 
   jugPos = box2d.getBodyPixelCoord(jug.body);
-  imgEnemy.detectarJugador(jugPos);
+  //imgEnemy.detectarJugador(jugPos);
   imgEnemy.display();
   
-  audEnemy.detectarJugador(jugPos);
-  audEnemy.display();
+  //audEnemy.detectarJugador(jugPos);
+  //audEnemy.display();
 
+  for (int i = projectiles.size()-1; i >= 0; i--) {
+    Bullet p = projectiles.get(i);
+    p.mover();
+    p.display();
+    if (p.done()) {
+      projectiles.remove(i);
+    }
+  }
 
   s.display();
-  //pared.move();
   pared[0].display();
   pared[1].display();
   //plataformas[0].display();
@@ -85,28 +97,52 @@ void draw() {
 }
 
 
-//void beginContact(Contact cp) {
-//  // Get both fixtures
-//  Fixture f1 = cp.getFixtureA();
-//  Fixture f2 = cp.getFixtureB();
+void beginContact(Contact cp) {
+  Fixture f1 = cp.getFixtureA();
+  Fixture f2 = cp.getFixtureB();
 
-//  if(f1.getUserData().equals("jugador")){
-//    jug = (Jugador)f1.getBody().getUserData();
-//    jug.onAir = false;
-//  }else{
-//    jug = (Jugador)f2.getBody().getUserData();
-//    jug.onAir = false;
-//  }
-//}
 
-//// Objects stop touching each other
-//void endContact(Contact cp) {
-//}
+  if((f1.getUserData().equals("jugador") && f2.getUserData().equals("imgEnemy")) ||
+     (f2.getUserData().equals("jugador") && f1.getUserData().equals("imgEnemy")) ){
+    if(f1.getUserData().equals("jugador")){
+      println("me cago ne dios");
+      Personaje p = (Personaje) f1.getBody().getUserData();
+      p.takeDamage(10);
+      println(p.vidaActual);
+    }
+   
+  }
+  
+  if(f2.getUserData().equals("bulletAnimation")){
+    Bullet b = (Bullet) f2.getBody().getUserData();
+    b.delete();
+    println(f1.getUserData());
+
+    Personaje e = (Personaje) f1.getBody().getUserData();
+    e.takeDamage(b.damage);
+    println(e.vidaActual);
+   
+  }
+  
+
+}
+
+// Objects stop touching each other
+void endContact(Contact cp) {
+}
 
 void keyPressed() {
-  keys[keyCode] = true;
+  if(key == CODED)
+    keys[keyCode] = true;
+  else
+    keys[key] = true;
+  
 }
 
 void keyReleased() {
-  keys[keyCode] = false;
+  if(key == CODED)
+    keys[keyCode] = false;
+  else
+    keys[key] = false;
+  
 }

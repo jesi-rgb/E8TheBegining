@@ -10,12 +10,17 @@ class Audio extends Enemigo{
   float dist;
   Vec2 vel;
   
+  
   Audio(Vec2 center, String spriteDirectory, int numSpr, int numSts, boolean flotante){
     super(center, spriteDirectory, numSpr, numSts, flotante);
+    
+    
     ANCHO_VISION = 1000;
     ALTO_VISION = 500;
+    
     preVel = body.getLinearVelocity().y;
     sentido = LEFT;
+    
     ampX = 1000;
     ampY = 500;
     wX = 0.03;
@@ -24,15 +29,18 @@ class Audio extends Enemigo{
     yInicial = center.y;
     a = 0;
     dist = 100;
+    
     vel = new Vec2(0,0);
+    
+    body.setUserData(this);
   }
   
   void mover() {
     inMotion = true;
-    float pFrames;
+    //float pFrames;
     
     if(detectado){
-      pFrames = 0.3;
+      //pFrames = 0.3;
       
       Vec2 pos = box2d.getBodyPixelCoord(this.body);
       float distancia;  
@@ -63,7 +71,7 @@ class Audio extends Enemigo{
       
       preVel = body.getLinearVelocity().x;
     } else {
-      pFrames = 0.90;
+      //pFrames = 0.90;
       vel.x = wX * ampX * cos(wX * a);
       body.setLinearVelocity(vel);
       if(vel.x > 0)
@@ -74,9 +82,6 @@ class Audio extends Enemigo{
     vel.y = wY * ampY * sin(wY * a);
     body.setLinearVelocity(vel);   
     a++;
-    
-    //if(random(1) < pFrames)
-    //  currentFrame--;
-    
   }
+  
 }

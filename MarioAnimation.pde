@@ -118,12 +118,12 @@ void beginContact(Contact cp) {
   if(f2.getUserData().equals("bulletAnimation")){
     Bullet b = (Bullet) f2.getBody().getUserData();
     b.delete();
-    println(f1.getUserData());
 
-    Personaje e = (Personaje) f1.getBody().getUserData();
-    e.takeDamage(b.damage);
-    println(e.vidaActual);
-   
+    if(!f1.getUserData().equals("suelo")){
+      Personaje e = (Personaje) f1.getBody().getUserData();
+      e.takeDamage(b.damage);
+      println(e.vidaActual);
+    }
   }
   
 

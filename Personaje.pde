@@ -125,7 +125,7 @@ abstract class Personaje {
   void takeDamage(int dmg){
     vidaActual -= dmg;
     if(vidaActual <= 0){
-      killBody();    
+      killBody();
     }
   }
   

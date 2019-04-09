@@ -9,7 +9,7 @@ class Imagen extends Enemigo{
     ALTO_VISION = 500;
     
     vidaMax = 20;
-    vidaActual = 20;
+    vidaActual = vidaMax;
   }
   
   void mover() {
@@ -67,5 +67,11 @@ class Imagen extends Enemigo{
         preVel = body.getLinearVelocity().x;
       }
     }
+  }
+  
+  
+  
+  void killBody() {
+    box2d.destroyBody(body);
   }
 }

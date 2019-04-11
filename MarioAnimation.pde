@@ -111,8 +111,8 @@ void beginContact(Contact cp) {
   Fixture f2 = cp.getFixtureB();
 
 
-  if((f1.getUserData().equals("jugador") && f2.getUserData().equals("imgEnemy")) ||
-     (f2.getUserData().equals("jugador") && f1.getUserData().equals("imgEnemy")) ){
+  if((f1.getUserData().equals("jugador") && f2.getUserData().equals("enemigo")) ||
+     (f2.getUserData().equals("jugador") && f1.getUserData().equals("enemigo")) ){
        Personaje p;
     if(f1.getUserData().equals("jugador")){
       p = (Personaje) f1.getBody().getUserData();

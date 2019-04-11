@@ -12,6 +12,7 @@ abstract class Enemigo extends Personaje {
   Enemigo(Vec2 center, String spriteDirectory, int numSpr, int numSts, boolean flotante) {
     super(center, spriteDirectory, numSpr, numSts, flotante);
     preVel = body.getLinearVelocity().x;
+    body.getFixtureList().setUserData("enemigo");
     inMotion = false;
     moviendo = false;
   }

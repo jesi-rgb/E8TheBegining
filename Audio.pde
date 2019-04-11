@@ -21,14 +21,14 @@ class Audio extends Enemigo{
     preVel = body.getLinearVelocity().y;
     sentido = LEFT;
     
-    ampX = 1000;
-    ampY = 500;
+    ampX = 1500;
+    ampY = 700;
     wX = 0.03;
     wY = 0.1;
     xInicial = center.x;
     yInicial = center.y;
     a = 0;
-    dist = 100;
+    dist = 500;
     
     vel = new Vec2(0,0);
     
@@ -41,6 +41,7 @@ class Audio extends Enemigo{
     //float pFrames;
     
     if(detectado){
+      shoot(jugPos);
       //pFrames = 0.3;
       
       Vec2 pos = box2d.getBodyPixelCoord(this.body);
@@ -83,6 +84,24 @@ class Audio extends Enemigo{
     vel.y = wY * ampY * sin(wY * a);
     body.setLinearVelocity(vel);   
     a++;
+  }
+  
+  void shoot(Vec2 jugPos){
+    if(a%50 == 0){
+      Vec2 pos = box2d.getBodyPixelCoord(this.body);
+      float sprWidth = sprites[0][0].width;
+      
+      Vec2 direction = new Vec2(jugPos.x-pos.x, jugPos.y-pos.y);
+      
+      if(currentDirection == RIGHT){
+        pos.x -= sprWidth/2+10;
+        projectiles.add(new Bullet(pos, direction, "enemigo"));
+      }
+      else{
+        pos.x += sprWidth/2+10;
+        projectiles.add(new Bullet(pos, direction, "enemigo"));
+      }
+    }
   }
   
 }

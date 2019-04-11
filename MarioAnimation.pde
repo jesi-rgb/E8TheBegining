@@ -50,8 +50,8 @@ void setup() {
   projectiles = new ArrayList<Bullet>();
 
   jug = new Jugador(new Vec2(width/2, height/2), "jugador", 8, 3, false);
-  imgEnemy = new Imagen(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2, false);
-  //audEnemy = new Audio(new Vec2(3*width/4, 7*height/8), "audEnemy", 19, 2, true);
+  //imgEnemy = new Imagen(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2, false);
+  audEnemy = new Audio(new Vec2(3*width/4, 7*height/8), "audEnemy", 19, 2, true);
   s = new Terreno(width/2, height-50, width, 50, "floor");
   pared[0] = new Terreno(0, height/2, 30, height*100, "floor");
   pared[1] = new Terreno(width, height/2, 30, height*100, "floor");
@@ -73,18 +73,18 @@ void draw() {
   jugPos = box2d.getBodyPixelCoord(jug.body);
   
   //Enemigos
-  if(imgEnemy != null){
-    if(imgEnemy.vidaActual>0){
-      //imgEnemy.detectarJugador(jugPos);
-      imgEnemy.display();
-    } else {
-      imgEnemy.killBody();
-      imgEnemy = null;
-    }
-  }
+  //if(imgEnemy != null){
+  //  if(imgEnemy.vidaActual>0){
+  //    //imgEnemy.detectarJugador(jugPos);
+  //    imgEnemy.display();
+  //  } else {
+  //    imgEnemy.killBody();
+  //    imgEnemy = null;
+  //  }
+  //}
   
-  //audEnemy.detectarJugador(jugPos);
-  //audEnemy.display();
+  audEnemy.detectarJugador(jugPos);
+  audEnemy.display();
 
   for (int i = projectiles.size()-1; i >= 0; i--) {
     Bullet p = projectiles.get(i);

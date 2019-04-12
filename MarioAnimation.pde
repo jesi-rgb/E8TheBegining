@@ -134,7 +134,6 @@ void beginContact(Contact cp) {
           b2.delete();
         } else {
           Personaje e = (Personaje) f1.getBody().getUserData();
-          e.takingDamage = true;
           e.takeDamage(b.damage);
           println(f1.getBody().getUserData() + ": " + e.vidaActual);
         }

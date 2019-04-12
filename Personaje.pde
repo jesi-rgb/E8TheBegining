@@ -74,9 +74,12 @@ abstract class Personaje {
 
     if ( (vel.x > -4.5 && vel.x <= 0) || (vel.x < 4.5 && vel.x >= 0) )
       inMotion = false;
+      
     if(takingDamage){
       tint(255, 0, 0, 127);
-    }
+      takingDamage = false;
+    } else noTint();
+    
     if (onAir) {
       image(sprites[2][currentDirection], pos.x, pos.y);
     } else
@@ -126,6 +129,7 @@ abstract class Personaje {
   
   void takeDamage(int dmg){
     vidaActual -= dmg;
+    takingDamage = true;
   }
   
   void killBody() {

@@ -66,7 +66,7 @@ class Jugador extends Personaje {
       Vec2 pos = box2d.getBodyPixelCoord(this.body);
       float sprWidth = sprites[0][0].width;
       
-      if(currentDirection == 0){
+      if(currentDirection == LEFT){
         pos.x -= sprWidth/2+10;
         projectiles.add(new Bullet(pos, new Vec2(-10, 0), "jugador"));
       }

@@ -7,6 +7,12 @@ class Jugador extends Personaje {
     vidaMax = 100;
     vidaActual = 100;
   }
+  
+  void accion(){
+    mover();
+    jump();
+    shoot();
+  }
 
   void mover() {
     Vec2 vel = body.getLinearVelocity();

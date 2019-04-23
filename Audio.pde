@@ -32,7 +32,7 @@ class Audio extends Enemigo{
     
     vel = new Vec2(0,0);
     
-    vidaMax = 20;
+    vidaMax = 100;
     vidaActual = vidaMax;
   }
   

@@ -23,6 +23,7 @@ Vec2 jugPos;
 Enemigo imgEnemy;
 Enemigo audEnemy;
 ArrayList<Bullet> projectiles;
+ArrayList<Enemigo> enemigos;
 
 PShape bg;
 
@@ -30,8 +31,8 @@ Boolean[] keys;
 
 void setup() {
 
-  fullScreen(P2D);
-  //size(1300, 700, P2D);
+  //fullScreen(P2D);
+  size(1300, 700, P2D);
   frameRate(40);
   imageMode(CENTER);
 
@@ -48,10 +49,13 @@ void setup() {
   }
   
   projectiles = new ArrayList<Bullet>();
+  enemigos = new ArrayList<Enemigo>();
 
   jug = new Jugador(new Vec2(width/2, height/2), "jugador", 8, 3, false);
   imgEnemy = new Imagen(new Vec2(3*width/4, height/2), "imgEnemy", 8, 2, false);
   audEnemy = new Audio(new Vec2(3*width/4, 7*height/8), "audEnemy", 19, 2, true);
+  enemigos.add(imgEnemy);
+  enemigos.add(audEnemy);
   s = new Terreno(width/2, height-50, width, 50, "floor");
   pared[0] = new Terreno(0, height/2, 30, height*100, "floor");
   pared[1] = new Terreno(width, height/2, 30, height*100, "floor");
@@ -68,6 +72,7 @@ void draw() {
   if(jug != null){
     if(jug.vidaActual>0){
       jug.accion();
+      jug.atacar(enemigos);
       jug.display();
       jugPos = box2d.getBodyPixelCoord(jug.body);
     } else {
@@ -80,7 +85,8 @@ void draw() {
   if(jug == null){
     textSize(78);
     fill(0);
-    text("Has muerto", width/2, height/2);
+    text("Game over", width/2, height/2);
+    tint(255, 0, 0);
   }
   
   //Enemigos

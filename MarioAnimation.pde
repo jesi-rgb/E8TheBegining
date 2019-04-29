@@ -65,12 +65,23 @@ void draw() {
   box2d.step(1/(frameRate * 2), 10, 10);
   
   //Jugador
-  jug.mover();
-  jug.jump();
-  jug.display();
-  jug.shoot();
-
-  jugPos = box2d.getBodyPixelCoord(jug.body);
+  if(jug != null){
+    if(jug.vidaActual>0){
+      jug.accion();
+      jug.display();
+      jugPos = box2d.getBodyPixelCoord(jug.body);
+    } else {
+      jug.killBody();
+      jug = null;
+      jugPos = new Vec2(10000, 10000);
+    }
+  }
+  
+  if(jug == null){
+    textSize(78);
+    fill(0);
+    text("Has muerto", width/2, height/2);
+  }
   
   //Enemigos
   if(imgEnemy != null){
@@ -83,8 +94,15 @@ void draw() {
     }
   }
   
-  audEnemy.detectarJugador(jugPos);
-  audEnemy.display();
+  if(audEnemy != null){
+    if(audEnemy.vidaActual>0){
+      audEnemy.detectarJugador(jugPos);
+      audEnemy.display();
+    } else {
+      audEnemy.killBody();
+      audEnemy = null;
+    }
+  }
 
   for (int i = projectiles.size()-1; i >= 0; i--) {
     Bullet p = projectiles.get(i);
@@ -121,7 +139,6 @@ void beginContact(Contact cp) {
     }
     
     p.takeDamage(10);
-    println(p.vidaActual);
   }
   
   if(f2.getUserData().equals("bulletAnimation")){
@@ -135,11 +152,10 @@ void beginContact(Contact cp) {
         } else {
           Personaje e = (Personaje) f1.getBody().getUserData();
           e.takeDamage(b.damage);
-          println(f1.getBody().getUserData() + ": " + e.vidaActual);
         }
       }
-      b.delete();
     }
+    b.delete();
   }
   
 

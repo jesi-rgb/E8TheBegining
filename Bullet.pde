@@ -51,7 +51,6 @@ class Bullet extends Personaje{
     currentFrame = (currentFrame + 1) % (NUM_SPRITES-1);
     pushMatrix();
       translate(pos.x,pos.y);
-      println(a);
       rotate(a);
       image(sprites[currentDirection][1+int(currentFrame)], 0, 0);
     popMatrix();

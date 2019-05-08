@@ -27,6 +27,7 @@ Vec2 jugPos;
 Enemigo imgEnemy;
 Enemigo audEnemy;
 ArrayList<Bullet> projectiles;
+ArrayList<Enemigo> enemigos;
 
 PShape bg;
 PImage tex;
@@ -54,6 +55,8 @@ void setup() {
   }
 
   projectiles = new ArrayList<Bullet>();
+  enemigos = new ArrayList<Enemigo>();
+
 
   jug = new Jugador(new Vec2(width/4, height/9), "jugador", 8, 3, false);
   //imgEnemy = new Imagen(new Vec2(3*width/4, height/6), "imgEnemy", 8, 2, false);
@@ -84,6 +87,7 @@ void draw() {
   if (jug != null) {
     if (jug.vidaActual>0) {
       jug.accion();
+      jug.atacar(enemigos);
       jug.display();
       jugPos = box2d.getBodyPixelCoord(jug.body);
     } else {

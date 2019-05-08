@@ -3,7 +3,6 @@ static enum State {
 }
 
 abstract class Personaje {
-  
   Vec2 velocity;
 
   PImage[][] sprites; //Matriz para guardar los sprites.
@@ -132,8 +131,17 @@ abstract class Personaje {
     takingDamage = true;
   }
   
+  void recibirGolpe(int direction, int dmg){
+    if(direction == LEFT){
+      body.applyForce(new Vec2(1000, 0), box2d.getBodyPixelCoord(body));
+    } else {
+      body.applyForce(new Vec2(-1000, 0), box2d.getBodyPixelCoord(body));
+    }
+    takeDamage(dmg);
+  }
+  
   void killBody() {
     box2d.destroyBody(body);
   }
-  
+
 }

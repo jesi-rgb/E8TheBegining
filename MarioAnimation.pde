@@ -28,6 +28,7 @@ Enemigo imgEnemy;
 Enemigo audEnemy;
 ArrayList<Bullet> projectiles;
 ArrayList<Enemigo> enemigos;
+//Coin[] coins = new Coin[10];
 
 PShape bg;
 PImage tex;
@@ -36,8 +37,8 @@ Boolean[] keys;
 
 void setup() {
 
-  //fullScreen(P2D);
-  size(1280, 720, P2D); 
+  fullScreen(P2D);
+  //size(1280, 720, P2D); 
   frameRate(40);
   imageMode(CENTER);
 
@@ -47,6 +48,11 @@ void setup() {
   box2d.listenForCollisions();
   
   tex = loadImage("media/scenarios/textures/texture.png");
+  
+  //for(int i=0;i<coins.length;i++){
+  //  coins[i] = new Coin(new PVector(width/2 + 50*i, height/2));
+  //  coins[i].display();
+  //}
 
 
   keys = new Boolean[256];
@@ -60,16 +66,20 @@ void setup() {
 
   jug = new Jugador(new Vec2(width/4, height/9), "jugador", 8, 3, false);
   //imgEnemy = new Imagen(new Vec2(3*width/4, height/6), "imgEnemy", 8, 2, false);
-  //audEnemy = new Audio(new Vec2(3*width/4, 7*height/8), "audEnemy", 19, 2, true);
+  //audEnemy = new Audio(new Vec2(3*width/4, height/6), "audEnemy", 19, 2, true);
 
   RG.init(this);
   RG.setPolygonizer(RG.ADAPTATIVE);
   grp = RG.loadShape("media/scenarios/level1.svg");
+  println(grp.width);
+  grp.scale(1.5);
+  println(grp.width);
   RPoint[] points = grp.getPoints();
   surface = new Scenario(points);
+  
 
   bg = loadShape("media/backgrounds/trianglify.svg");
-
+  
   //s = new Terreno(width/2, height-50, width, 50, "floor");
   //pared[0] = new Terreno(0, height/2, 30, height*100, "floor");
   //pared[1] = new Terreno(width, height/2, 30, height*100, "floor");
@@ -82,10 +92,15 @@ void draw() {
 
   shape(bg);
   surface.display();
+  
+  //for(int i=0;i<coins.length;i++){
+  //  coins[i].display();
+  //}
+
 
   //Jugador
   if (jug != null) {
-    if (jug.vidaActual>0) {
+    if (jug.vidaActual > 0 && !jug.outOfBounds()) {
       jug.accion();
       jug.atacar(enemigos);
       jug.display();

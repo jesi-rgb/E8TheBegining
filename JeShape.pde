@@ -11,12 +11,7 @@ class JeShape {
       Vec2 edge = box2d.coordPixelsToWorld(new Vec2(points.get(i).x, points.get(i).y));
       vertices[i] = edge;
     }
-    vertices[points.size()] = box2d.coordPixelsToWorld(new Vec2(points.get(0).x, points.get(0).y));;
-    
-    for (int i=0; i<vertices.length; i++) {
-      println(i, vertices[i].x, vertices[i].y);
-    }
-    println("\n");
+    vertices[points.size()] = box2d.coordPixelsToWorld(new Vec2(points.get(0).x, points.get(0).y));
     chain.createChain(vertices, vertices.length);
 
     BodyDef bd = new BodyDef();
@@ -35,14 +30,11 @@ class JeShape {
     
     strokeWeight(2);
     stroke(0);
-    //fill(255);
     textureMode(NORMAL);
     textureWrap(REPEAT);
-    
-    
+    tint(0, 240, 0, 127);
     
     beginShape();
-      tint(0, 240, 0, 127);
       texture(tex);
       vertex(esqInfIzda.x, esqInfIzda.y, 0, 0);
       vertex(esqInfIzda.x + w, esqInfIzda.y, 1, 0);
@@ -52,9 +44,5 @@ class JeShape {
     endShape();
     
     noTint();
-
-    
-
-    //rect(esqInfIzda.x, esqInfIzda.y, w, h);
   }
 }

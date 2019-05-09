@@ -97,7 +97,7 @@ class Jugador extends Personaje {
               enemigos.get(i).recibirGolpe(LEFT, 20);
             }
           }
-          rect(pos.x, pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
+          //rect(pos.x, pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
         } else {
           for (int i=0; i<enemigos.size(); i++) {
             Vec2 posEnemy = box2d.getBodyPixelCoord(enemigos.get(i).body);
@@ -107,9 +107,15 @@ class Jugador extends Personaje {
               enemigos.get(i).recibirGolpe(RIGHT, 20);
             }
           }
-          rect(pos.x, pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
+          //rect(pos.x, pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
         }
       }
     }
+  }
+
+
+  boolean outOfBounds() {
+    Vec2 pos = box2d.getBodyPixelCoord(this.body);
+    return (pos.y > height + jug.sprites[RIGHT][0].height);
   }
 }

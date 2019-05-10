@@ -12,7 +12,7 @@ abstract class Personaje {
   Boolean onAir;
   int currentDirection; //Nos dice la dirección hacia la que mira el personaje.
   float currentFrame; //Nos indica el sprite que estamos reproduciendo.
-  
+
   int vidaMax;
   int vidaActual;
   boolean takingDamage;
@@ -23,6 +23,10 @@ abstract class Personaje {
   String sprDir;
   int NUM_SPRITES;
   int NUM_STATES; //estados del personaje (saltar, correr dcha, izda, etc...)
+
+  float wRatio = float(width) / FULLSCREEN_WIDTH;
+  float hRatio = float(height) / FULLSCREEN_HEIGHT;
+  float sprRatio;
 
 
   /*
@@ -45,16 +49,27 @@ abstract class Personaje {
     onAir = false;
     currentDirection = RIGHT;
     takingDamage = false;
-    
+
     sprites = new PImage[NUM_STATES][NUM_SPRITES];
+
     for (int i=0; i<NUM_SPRITES; i++) {
       sprites[LEFT][i] = loadImage("media/"+spriteDirectory+"/"+LEFT+"/spr"+(i+1)+".png");
       sprites[RIGHT][i] = loadImage("media/"+spriteDirectory+"/"+RIGHT+"/spr"+(i+1)+".png");
+
+      //sprRatio = sprites[RIGHT][i].width / float(sprites[RIGHT][i].height);
+
+      sprites[LEFT][i].resize(int(sprites[RIGHT][i].width * wRatio), int(sprites[RIGHT][i].height * hRatio));
+      sprites[RIGHT][i].resize(int(sprites[RIGHT][i].width * wRatio), int(sprites[RIGHT][i].height * hRatio));
     }
     if (NUM_STATES == 3) {
       sprites[2][0] = loadImage("media/"+spriteDirectory+"/jump/jump0.png");
       sprites[2][1] = loadImage("media/"+spriteDirectory+"/jump/jump1.png");
+
+      sprites[2][0].resize(int(sprites[2][0].width * wRatio), int(sprites[2][0].height * hRatio));
+      sprites[2][1].resize(int(sprites[2][1].width * wRatio), int(sprites[2][1].height * hRatio));
     }
+
+
 
     makeBody(center, flotante);
     body.setUserData(this);
@@ -73,20 +88,20 @@ abstract class Personaje {
 
     if ( (vel.x > -4.5 && vel.x <= 0) || (vel.x < 4.5 && vel.x >= 0) )
       inMotion = false;
-      
-    if(takingDamage){
-      tint(255, 0, 0, 127);
+
+    if (takingDamage) {
+      tint(255, 0, 0, 200);
       takingDamage = false;
     } else noTint();
-    
+
     if (onAir) {
       image(sprites[2][currentDirection], pos.x, pos.y);
     } else
-    if (inMotion) {
-      image(sprites[currentDirection][1+int(currentFrame)], pos.x, pos.y);
-    } else {
-      image(sprites[currentDirection][0], pos.x, pos.y);
-    }
+      if (inMotion) {
+        image(sprites[currentDirection][1+int(currentFrame)], pos.x, pos.y);
+      } else {
+        image(sprites[currentDirection][0], pos.x, pos.y);
+      }
     noTint();
   }
 
@@ -97,7 +112,7 @@ abstract class Personaje {
     //Define a body
     BodyDef bd = new BodyDef();
     bd.type = BodyType.DYNAMIC;
-    if(flotante){
+    if (flotante) {
       bd.gravityScale = 0;
     }
     bd.position = box2d.coordPixelsToWorld(center);
@@ -124,24 +139,33 @@ abstract class Personaje {
     body.createFixture(fd);
     body.resetMassData();
   }
-  
-  
-  void takeDamage(int dmg){
+
+
+  void takeDamage(int dmg) {
     vidaActual -= dmg;
     takingDamage = true;
   }
-  
-  void recibirGolpe(int direction, int dmg){
-    if(direction == LEFT){
+
+  void recibirGolpe(int direction, int dmg) {
+    if (direction == LEFT) {
       body.applyForce(new Vec2(1000, 0), box2d.getBodyPixelCoord(body));
     } else {
       body.applyForce(new Vec2(-1000, 0), box2d.getBodyPixelCoord(body));
     }
     takeDamage(dmg);
   }
-  
+
   void killBody() {
     box2d.destroyBody(body);
   }
 
+  boolean outOfBounds() {
+    //println("4");
+    if (body != null) {
+      Vec2 pos = box2d.getBodyPixelCoord(this.body);
+      //println((pos.y > height + jug.sprites[RIGHT][0].height));
+      return (pos.y > height + jug.sprites[RIGHT][0].height);
+    }
+    return true;
+  }
 }

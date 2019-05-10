@@ -6,6 +6,8 @@ import org.jbox2d.dynamics.*;
 import org.jbox2d.dynamics.contacts.*;
 
 import geomerative.*;
+import processing.sound.*;
+
 
 
 final static int LEFT = 0, RIGHT = 1;
@@ -13,6 +15,9 @@ final static int LEFT_ARROW = 37;
 final static int UP_ARROW = 38;
 final static int RIGHT_ARROW = 39;
 final static int DOWN_ARROW = 40;
+final int FULLSCREEN_WIDTH = 1920;
+final int FULLSCREEN_HEIGHT = 1080;
+
 
 Box2DProcessing box2d;
 
@@ -22,13 +27,20 @@ Plataforma[] plataformas = new Plataforma[4];
 RShape grp;
 Scenario surface;
 
+SoundFile bgMusic;
+SoundFile jump;
+SoundFile shoot;
+SoundFile intro;
+
+ArrayList<Coin> coins;
+
 Jugador jug;
 Vec2 jugPos;
 Enemigo imgEnemy;
 Enemigo audEnemy;
 ArrayList<Bullet> projectiles;
 ArrayList<Enemigo> enemigos;
-//Coin[] coins = new Coin[10];
+
 
 PShape bg;
 PImage tex;
@@ -37,8 +49,10 @@ Boolean[] keys;
 
 void setup() {
 
-  fullScreen(P2D);
-  //size(1280, 720, P2D); 
+  //fullScreen(P2D);
+  size(1366, 768, P2D);
+  //size(1280, 720, P2D);
+  //size(720, 480, P2D);
   frameRate(40);
   imageMode(CENTER);
 
@@ -47,13 +61,21 @@ void setup() {
   box2d.setGravity(0, -700);
   box2d.listenForCollisions();
   
-  tex = loadImage("media/scenarios/textures/texture.png");
-  
-  //for(int i=0;i<coins.length;i++){
-  //  coins[i] = new Coin(new PVector(width/2 + 50*i, height/2));
-  //  coins[i].display();
-  //}
+  bgMusic = new SoundFile(this, "media/music/bgMusic.wav");
+  intro = new SoundFile(this, "media/music/intro.wav");
+  jump = new SoundFile(this, "media/music/jump.wav");
+  shoot = new SoundFile(this, "media/music/shoot.wav");
+  bgMusic.amp(0.4);
+  intro.amp(0.4);
+  shoot.amp(0.4);
+  intro.play();
+  delay(int(intro.duration())*1000);
+  bgMusic.loop();
 
+  coins = new ArrayList<Coin>();
+  for (int c = 0; c < 3; c++) {
+    coins.add(new Coin(new PVector(width/4 + 25*c, height/6)));
+  }
 
   keys = new Boolean[256];
   for (int i=0; i<keys.length; i++) {
@@ -65,73 +87,73 @@ void setup() {
 
 
   jug = new Jugador(new Vec2(width/4, height/9), "jugador", 8, 3, false);
-  //imgEnemy = new Imagen(new Vec2(3*width/4, height/6), "imgEnemy", 8, 2, false);
-  //audEnemy = new Audio(new Vec2(3*width/4, height/6), "audEnemy", 19, 2, true);
+  //imgEnemy = new Imagen(new Vec2(width/4, height/2), "imgEnemy", 8, 2, false);
+  //audEnemy = new Audio(new Vec2(3*width/4, height/2 - 10), "audEnemy", 19, 2, true);
 
+
+  tex = loadImage("media/scenarios/textures/texture.png");
   RG.init(this);
   RG.setPolygonizer(RG.ADAPTATIVE);
-  grp = RG.loadShape("media/scenarios/level1.svg");
-  println(grp.width);
-  grp.scale(1.5);
-  println(grp.width);
+  grp = RG.loadShape("media/scenarios/level2.svg");
+  grp.scale(width/grp.width);
+
   RPoint[] points = grp.getPoints();
   surface = new Scenario(points);
-  
+
 
   bg = loadShape("media/backgrounds/trianglify.svg");
-  
-  //s = new Terreno(width/2, height-50, width, 50, "floor");
-  //pared[0] = new Terreno(0, height/2, 30, height*100, "floor");
-  //pared[1] = new Terreno(width, height/2, 30, height*100, "floor");
-  //plataformas[0] = new Plataforma(width/2, 4*height/5, 300, 20, 1);
-  //plataformas[1] = new Plataforma(3*width/4, 4*height/5, 200, 20, 1);
 }
 
 void draw() {
   box2d.step(1/(frameRate * 2), 10, 10);
-
   shape(bg);
   surface.display();
-  
-  //for(int i=0;i<coins.length;i++){
-  //  coins[i].display();
-  //}
 
+  for (Coin c : coins) {
+    c.display();
+  }
 
   //Jugador
   if (jug != null) {
-    if (jug.vidaActual > 0 && !jug.outOfBounds()) {
+    //println("1");
+    if ( !(jug.vidaActual <= 0 || jug.outOfBounds()) ) { //no sé como hacer esto mendorito ayuda
+      //println("2");
+      textSize(30);
+      fill(0);
+      text(jug.vidaActual, 40, 40);
       jug.accion();
       jug.atacar(enemigos);
       jug.display();
       jugPos = box2d.getBodyPixelCoord(jug.body);
     } else {
+      //println("3");
       jug.killBody();
       jug = null;
       jugPos = new Vec2(10000, 10000);
     }
-  }
-
-  if (jug == null) {
+  } else {
     textSize(78);
     fill(0);
     textAlign(CENTER);
     text("Has muerto", width/2, height/2);
+    bgMusic.stop();
+    setup();
   }
 
   //Enemigos
   if (imgEnemy != null) {
-    if (imgEnemy.vidaActual>0) {
+    if (imgEnemy.vidaActual > 0 && !imgEnemy.outOfBounds()) {
       imgEnemy.detectarJugador(jugPos);
       imgEnemy.display();
     } else {
+      //print("Rip imagen");
       imgEnemy.killBody();
       imgEnemy = null;
     }
   }
 
   if (audEnemy != null) {
-    if (audEnemy.vidaActual>0) {
+    if (audEnemy.vidaActual > 0 && !audEnemy.outOfBounds()) {
       audEnemy.detectarJugador(jugPos);
       audEnemy.display();
     } else {
@@ -149,18 +171,6 @@ void draw() {
         projectiles.remove(i);
       }
     }
-
-
-
-
-  //s.display();
-  //pared[0].display();
-  //pared[1].display();
-  //plataformas[0].display();
-  //plataformas[1].display();
-
-  //plataformas[0].move(1, 100);
-  //plataformas[1].move(1, 50);
 }
 
 

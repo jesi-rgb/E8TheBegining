@@ -59,6 +59,7 @@ class Jugador extends Personaje {
 
     //Si se pulsa space y no estamos en el aire, saltamos
     if ((keys[' '] || keys[UP_ARROW]) && !onAir) {
+      jump.play();
       //estamos en el aire
       onAir=true;
       keys[32]=false; //Si lo descomentamos habrá que pulsar espacio cada vez que queramos saltar
@@ -71,6 +72,7 @@ class Jugador extends Personaje {
 
   void shoot() {
     if (keys['.'] && frameCount%5 == 0) {
+      shoot.play();
       Vec2 pos = box2d.getBodyPixelCoord(this.body);
       float sprWidth = sprites[0][0].width;
 
@@ -97,7 +99,7 @@ class Jugador extends Personaje {
               enemigos.get(i).recibirGolpe(LEFT, 20);
             }
           }
-          //rect(pos.x, pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
+          rect(pos.x, pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
         } else {
           for (int i=0; i<enemigos.size(); i++) {
             Vec2 posEnemy = box2d.getBodyPixelCoord(enemigos.get(i).body);
@@ -107,15 +109,12 @@ class Jugador extends Personaje {
               enemigos.get(i).recibirGolpe(RIGHT, 20);
             }
           }
-          //rect(pos.x, pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
+          rect(pos.x,  pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
         }
       }
     }
   }
 
 
-  boolean outOfBounds() {
-    Vec2 pos = box2d.getBodyPixelCoord(this.body);
-    return (pos.y > height + jug.sprites[RIGHT][0].height);
-  }
+  
 }

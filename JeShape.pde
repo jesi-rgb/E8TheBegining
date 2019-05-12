@@ -34,7 +34,7 @@ class JeShape {
     noStroke();
     textureMode(NORMAL);
     textureWrap(REPEAT);
-    fill(second() % 255);
+    fill(70);
     rect(esqInfIzda.x, esqInfIzda.y, w, h);
     //tint(random(0, 255), random(0, 255), random(0, 255), random(0, 255));
     

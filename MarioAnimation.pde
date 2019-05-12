@@ -50,8 +50,8 @@ Boolean[] keys;
 void setup() {
 
   //fullScreen(P2D);
-  size(1366, 768, P2D);
-  //size(1280, 720, P2D);
+  //size(1366, 768, P2D);
+  size(1280, 720, P2D);
   //size(720, 480, P2D);
   frameRate(40);
   imageMode(CENTER);
@@ -60,22 +60,22 @@ void setup() {
   box2d.createWorld();
   box2d.setGravity(0, -700);
   box2d.listenForCollisions();
-  
-  bgMusic = new SoundFile(this, "media/music/bgMusic.wav");
-  intro = new SoundFile(this, "media/music/intro.wav");
-  jump = new SoundFile(this, "media/music/jump.wav");
-  shoot = new SoundFile(this, "media/music/shoot.wav");
-  bgMusic.amp(0.4);
-  intro.amp(0.4);
-  shoot.amp(0.4);
-  intro.play();
-  delay(int(intro.duration())*1000);
-  bgMusic.loop();
 
-  coins = new ArrayList<Coin>();
-  for (int c = 0; c < 3; c++) {
-    coins.add(new Coin(new PVector(width/4 + 25*c, height/6)));
-  }
+  //bgMusic = new SoundFile(this, "media/music/bgMusic.wav");
+  //intro = new SoundFile(this, "media/music/intro.wav");
+  //jump = new SoundFile(this, "media/music/jump.wav");
+  //shoot = new SoundFile(this, "media/music/shoot.wav");
+  //bgMusic.amp(0.4);
+  //intro.amp(0.4);
+  //shoot.amp(0.4);
+  //intro.play();
+  //delay(int(intro.duration())*1000);
+  //bgMusic.loop();
+
+  //coins = new ArrayList<Coin>();
+  //for (int c = 0; c < 3; c++) {
+  //  coins.add(new Coin(new Vec2(width/4 + 25*c, height/6)));
+  //}
 
   keys = new Boolean[256];
   for (int i=0; i<keys.length; i++) {
@@ -109,9 +109,9 @@ void draw() {
   shape(bg);
   surface.display();
 
-  for (Coin c : coins) {
-    c.display();
-  }
+  //for (Coin c : coins) {
+  //  c.display();
+  //}
 
   //Jugador
   if (jug != null) {
@@ -136,7 +136,7 @@ void draw() {
     fill(0);
     textAlign(CENTER);
     text("Has muerto", width/2, height/2);
-    bgMusic.stop();
+    //bgMusic.stop();
     setup();
   }
 
@@ -178,6 +178,18 @@ void beginContact(Contact cp) {
   Fixture f1 = cp.getFixtureA();
   Fixture f2 = cp.getFixtureB();
 
+  if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("coin")) ||
+    (f2.getUserData().equals("jugador") && f1.getUserData().equals("coin")) ) {
+      Coin c;
+      if (f1.getUserData().equals("coin")) {
+        c = (Coin) f1.getBody().getUserData();
+      } else {
+        c = (Coin) f2.getBody().getUserData();
+      }
+      println("AaaAS");
+      c.killBody();
+      
+    }
 
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("enemigo")) ||
     (f2.getUserData().equals("jugador") && f1.getUserData().equals("enemigo")) ) {

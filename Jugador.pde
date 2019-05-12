@@ -2,12 +2,25 @@ class Jugador extends Personaje {
   float preVelY;
   int ALTO_ATAQUE = sprites[RIGHT][0].height;
   int ANCHO_ATAQUE = 100;
+  int NUM_SPRITES_ATTACK = 11;
+  float currentFrameAttack;
+
+  PImage[] attack;
 
   Jugador(Vec2 center, String spriteDirectory, int numSpr, int numSts, boolean flotante) {
     super(center, spriteDirectory, numSpr, numSts, flotante);
     preVelY = body.getLinearVelocity().y;
     vidaMax = 100;
     vidaActual = 100;
+    
+    currentFrameAttack = 0;
+    
+    attack = new PImage[NUM_SPRITES_ATTACK];
+    for(int i = 0; i < attack.length; i++){
+      attack[i] = loadImage("media/jugador/attack/spr"+(i+1)+".png");
+      attack[i].resize(int(attack[i].width * wRatio) + ANCHO_ATAQUE, int(attack[i].height * hRatio) + ALTO_ATAQUE);
+    }
+    
   }
 
   void accion() {
@@ -59,7 +72,7 @@ class Jugador extends Personaje {
 
     //Si se pulsa space y no estamos en el aire, saltamos
     if ((keys[' '] || keys[UP_ARROW]) && !onAir) {
-      jump.play();
+      //jump.play();
       //estamos en el aire
       onAir=true;
       keys[32]=false; //Si lo descomentamos habrá que pulsar espacio cada vez que queramos saltar
@@ -72,7 +85,7 @@ class Jugador extends Personaje {
 
   void shoot() {
     if (keys['.'] && frameCount%5 == 0) {
-      shoot.play();
+      //shoot.play();
       Vec2 pos = box2d.getBodyPixelCoord(this.body);
       float sprWidth = sprites[0][0].width;
 
@@ -89,6 +102,7 @@ class Jugador extends Personaje {
   void atacar(ArrayList<Enemigo> enemigos) {
     if (keyPressed) {
       if (keys[',']) {
+        attackAnimation();
         Vec2 pos = box2d.getBodyPixelCoord(this.body);
         if (currentDirection == LEFT) {
           for (int i=0; i<enemigos.size(); i++) {
@@ -99,7 +113,7 @@ class Jugador extends Personaje {
               enemigos.get(i).recibirGolpe(LEFT, 20);
             }
           }
-          rect(pos.x, pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
+          //rect(pos.x, pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
         } else {
           for (int i=0; i<enemigos.size(); i++) {
             Vec2 posEnemy = box2d.getBodyPixelCoord(enemigos.get(i).body);
@@ -109,10 +123,17 @@ class Jugador extends Personaje {
               enemigos.get(i).recibirGolpe(RIGHT, 20);
             }
           }
-          rect(pos.x,  pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
+          //rect(pos.x,  pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
         }
       }
     }
+  }
+  
+  void attackAnimation(){
+    Vec2 pos = box2d.getBodyPixelCoord(this.body);
+    
+    image(attack[int(currentFrameAttack+=0.5)%NUM_SPRITES_ATTACK], pos.x, pos.y);
+    
   }
 
 

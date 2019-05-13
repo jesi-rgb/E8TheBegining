@@ -17,15 +17,15 @@ class Bullet extends Personaje{
   void mover(){
     inMotion = true;
     if(direction.x < 0){
-      velocity.x -= 10;
+      velocity.x -= 10 * wRatio;
       currentDirection = RIGHT;
     }else{
-      velocity.x += 10;
+      velocity.x += 10 * wRatio;
       currentDirection = LEFT;
     }
     
     float seno = direction.y / (sqrt(pow(direction.x, 2) + pow(direction.y, 2)));
-    velocity.y -= 10 * seno;
+    velocity.y -= 10 * seno * wRatio;
     
     body.setLinearVelocity(velocity);
   }

@@ -23,9 +23,6 @@ abstract class Personaje {
   String sprDir;
   int NUM_SPRITES;
   int NUM_STATES; //estados del personaje (saltar, correr dcha, izda, etc...)
-
-  float wRatio = float(width) / FULLSCREEN_WIDTH;
-  float hRatio = float(height) / FULLSCREEN_HEIGHT;
   float sprRatio;
 
 
@@ -58,15 +55,15 @@ abstract class Personaje {
 
       //sprRatio = sprites[RIGHT][i].width / float(sprites[RIGHT][i].height);
 
-      sprites[LEFT][i].resize(int(sprites[RIGHT][i].width * wRatio), int(sprites[RIGHT][i].height * hRatio));
-      sprites[RIGHT][i].resize(int(sprites[RIGHT][i].width * wRatio), int(sprites[RIGHT][i].height * hRatio));
+      sprites[LEFT][i].resize(int(sprites[RIGHT][i].width * wRatio), int(sprites[RIGHT][i].height * wRatio));
+      sprites[RIGHT][i].resize(int(sprites[RIGHT][i].width * wRatio), int(sprites[RIGHT][i].height * wRatio));
     }
     if (NUM_STATES == 3) {
       sprites[2][0] = loadImage("media/"+spriteDirectory+"/jump/jump0.png");
       sprites[2][1] = loadImage("media/"+spriteDirectory+"/jump/jump1.png");
 
-      sprites[2][0].resize(int(sprites[2][0].width * wRatio), int(sprites[2][0].height * hRatio));
-      sprites[2][1].resize(int(sprites[2][1].width * wRatio), int(sprites[2][1].height * hRatio));
+      sprites[2][0].resize(int(sprites[2][0].width * wRatio), int(sprites[2][0].height * wRatio));
+      sprites[2][1].resize(int(sprites[2][1].width * wRatio), int(sprites[2][1].height * wRatio));
     }
 
 

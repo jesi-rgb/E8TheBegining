@@ -18,6 +18,7 @@ final static int DOWN_ARROW = 40;
 final int FULLSCREEN_WIDTH = 1920;
 final int FULLSCREEN_HEIGHT = 1080;
 
+float wRatio;
 
 Box2DProcessing box2d;
 
@@ -51,14 +52,16 @@ void setup() {
 
   //fullScreen(P2D);
   //size(1366, 768, P2D);
-  size(1280, 720, P2D);
+  size(1280, 400, P2D);
   //size(720, 480, P2D);
   frameRate(40);
   imageMode(CENTER);
-
+  
+  wRatio = float(width) / FULLSCREEN_WIDTH;
+  
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
-  box2d.setGravity(0, -700);
+  box2d.setGravity(0, -700 * wRatio);
   box2d.listenForCollisions();
 
   //bgMusic = new SoundFile(this, "media/music/bgMusic.wav");
@@ -188,7 +191,6 @@ void beginContact(Contact cp) {
 
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("coin")) ||
     (f2.getUserData().equals("jugador") && f1.getUserData().equals("coin")) ) {
-      println("Contacto moneda");
       Coin c;
       if (f1.getUserData().equals("coin")) {
         c = (Coin) f1.getBody().getUserData();

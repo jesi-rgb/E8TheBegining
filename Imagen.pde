@@ -24,12 +24,12 @@ class Imagen extends Enemigo{
   
       if (jugPos.x > (pos.x - ANCHO_VISION/2) && jugPos.x < pos.x) {
         currentDirection = LEFT;
-        vel.x -= 5;
+        vel.x -= 5 * wRatio;
       }
       
       if (jugPos.x < (pos.x + ANCHO_VISION/2) && jugPos.x > pos.x) {
         currentDirection = RIGHT;
-        vel.x += 5;
+        vel.x += 5 * wRatio;
       }
   
       body.setLinearVelocity(vel);
@@ -52,8 +52,8 @@ class Imagen extends Enemigo{
       if (moviendo) {
   
         if (currentDirection == LEFT) {
-          vel.x += random(-10, -3);
-        } else vel.x += random(3, 10);
+          vel.x += random(-10, -3) * wRatio;
+        } else vel.x += random(3, 10) * wRatio;
   
         body.setLinearVelocity(vel);
   

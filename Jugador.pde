@@ -1,7 +1,7 @@
 class Jugador extends Personaje {
   float preVelY;
-  int ALTO_ATAQUE = sprites[RIGHT][0].height;
-  int ANCHO_ATAQUE = 100;
+  int ALTO_ATAQUE = int(sprites[RIGHT][0].height * wRatio);
+  int ANCHO_ATAQUE = int(100 * wRatio);
   int NUM_SPRITES_ATTACK = 11;
   float currentFrameAttack;
   int monedas;
@@ -20,7 +20,7 @@ class Jugador extends Personaje {
     attack = new PImage[NUM_SPRITES_ATTACK];
     for(int i = 0; i < attack.length; i++){
       attack[i] = loadImage("media/jugador/attack/spr"+(i+1)+".png");
-      attack[i].resize(int(attack[i].width * wRatio) + ANCHO_ATAQUE, int(attack[i].height * hRatio) + ALTO_ATAQUE);
+      attack[i].resize(int(attack[i].width * wRatio) + ANCHO_ATAQUE, int(attack[i].height * wRatio) + ALTO_ATAQUE);
     }
     
   }
@@ -47,17 +47,17 @@ class Jugador extends Personaje {
 
     switch(state) {
     case left:
-      vel.x -= 10;
+      vel.x -= 10 * wRatio;
       inMotion = true;
       currentDirection = LEFT;
       break;
     case right:
-      vel.x += 10;
+      vel.x += 10 * wRatio;
       inMotion = true;
       currentDirection = RIGHT;
       break;
     case stop:
-      vel.x *= 0.69;
+      vel.x *= 0.69 * wRatio;
       break;
     }
 
@@ -78,7 +78,7 @@ class Jugador extends Personaje {
       //estamos en el aire
       onAir=true;
       keys[32]=false; //Si lo descomentamos habrá que pulsar espacio cada vez que queramos saltar
-      vel.y += 500;
+      vel.y += 500 * wRatio * wRatio;
       body.applyLinearImpulse(vel, body.getWorldCenter(), true);
     }
 

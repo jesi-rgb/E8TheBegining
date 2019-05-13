@@ -51,21 +51,21 @@ class Audio extends Enemigo{
         currentDirection = RIGHT;
         distancia = pos.x - jugPos.x;
         if(distancia<dist){
-          vel.x += 5;
+          vel.x += 5 * wRatio;
         } else {
           if(distancia>dist){
-            vel.x -= 5;
-          } else vel.x = wX * ampX * cos(wX * a);
+            vel.x -= 5 * wRatio;
+          } else vel.x = wX * ampX * cos(wX * a) * wRatio;
         }
       } else {
         currentDirection = LEFT;
         distancia = jugPos.x - pos.x;
         if(distancia<dist){
-          vel.x -= 5;
+          vel.x -= 5 * wRatio;
         } else {
           if(distancia>dist){
-            vel.x += 5;
-          } else vel.x = wX * ampX * cos(wX * a);
+            vel.x += 5 * wRatio;
+          } else vel.x = wX * ampX * cos(wX * a) * wRatio;
         }
       }
   
@@ -74,14 +74,14 @@ class Audio extends Enemigo{
       preVel = body.getLinearVelocity().x;
     } else {
       //pFrames = 0.90;
-      vel.x = wX * ampX * cos(wX * a);
+      vel.x = wX * ampX * cos(wX * a) * wRatio;
       body.setLinearVelocity(vel);
       if(vel.x > 0)
         currentDirection = LEFT;
       else
         currentDirection = RIGHT;
     }
-    vel.y = wY * ampY * sin(wY * a);
+    vel.y = wY * ampY * sin(wY * a) * wRatio;
     body.setLinearVelocity(vel);   
     a++;
   }

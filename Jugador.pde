@@ -113,7 +113,7 @@ class Jugador extends Personaje {
               (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 < (pos.y - ALTO_ATAQUE/2)) &&
               (posEnemy.y - enemigos.get(i).sprites[RIGHT][0].height/2 < (pos.y + ALTO_ATAQUE/2) &&
               (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 > (pos.y - ALTO_ATAQUE/2)))) {
-                enemigos.get(i).recibirGolpe(LEFT, 20);
+                enemigos.get(i).recibirGolpe(LEFT, 1000);
             }
           }
         } else {
@@ -123,7 +123,7 @@ class Jugador extends Personaje {
               (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 > (pos.y - ALTO_ATAQUE/2)) &&
               (posEnemy.y - enemigos.get(i).sprites[RIGHT][0].height/2 < (pos.y + ALTO_ATAQUE/2)) &&
               (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 > (pos.y - ALTO_ATAQUE/2))) {
-                enemigos.get(i).recibirGolpe(RIGHT, 20);
+                enemigos.get(i).recibirGolpe(RIGHT, 1000);
             }
           }
           //rect(pos.x,  pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);

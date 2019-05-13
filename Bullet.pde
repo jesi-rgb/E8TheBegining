@@ -7,7 +7,7 @@ class Bullet extends Personaje {
   float a;
 
   Bullet(Vec2 origin, Vec2 dest, String pers) {
-    super(origin, "bulletAnimation", 7, 2, true);
+    super(origin, "xboxanimation", 7, 2, true);
     direction = dest;
     delete = false;
     damage = 10;

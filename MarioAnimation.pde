@@ -147,7 +147,6 @@ void draw() {
     textAlign(CENTER);
     text("Array index out of bounds", width/2, height/2);
     bgMusic.stop();
-    delay(3000);
     setup();
   }
 
@@ -189,6 +188,8 @@ void draw() {
 void beginContact(Contact cp) {
   Fixture f1 = cp.getFixtureA();
   Fixture f2 = cp.getFixtureB();
+  
+  println(f1.getUserData(), f2.getUserData());
 
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("coin")) ||
     (f2.getUserData().equals("jugador") && f1.getUserData().equals("coin")) ) {
@@ -228,8 +229,10 @@ void beginContact(Contact cp) {
           Bullet b2 = (Bullet) f1.getBody().getUserData();
           b2.delete();
         } else {
-          Personaje e = (Personaje) f1.getBody().getUserData();
-          e.takeDamage(b.damage);
+          if(f1.getUserData().equals("jugador")){
+            Personaje e = (Personaje) f1.getBody().getUserData();
+            e.takeDamage(b.damage);
+          }
         }
       }
     }

@@ -42,7 +42,7 @@ Enemigo imgEnemy;
 Enemigo audEnemy;
 ArrayList<Bullet> projectiles;
 ArrayList<Enemigo> enemigos;
-Vec2[] spawners;
+Vec2[][] spawners;
 
 PShape bg;
 PImage tex;
@@ -83,23 +83,27 @@ void setup() {
   //intro.play();
   bgMusic.loop();
   
-  spawners = new Vec2[5];
-  spawners[0] = new Vec2(width/4, height/11);
-  spawners[1] = new Vec2(3*width/4, height/2 - 10);
-  spawners[2] = new Vec2(width/4, height/2);
-  spawners[3] = new Vec2(3*width/4, height/10);
-  spawners[4] = new Vec2(3*width/4, 2*height/10);
+  spawners = new Vec2[3][3];
+  spawners[0][0] = new Vec2(2*width/4, height/11);
+  spawners[0][1] = new Vec2(width/4, height/2);
+  spawners[0][2] = new Vec2(width/4, height/4);
+  spawners[1][0] = new Vec2(width/4, height/11);
+  spawners[1][1] = new Vec2(3*width/4, height/2);
+  spawners[1][2] = new Vec2(width/4, height/2);
+  spawners[2][0] = new Vec2(width/4, height/2);
+  spawners[2][1] = new Vec2(3*width/4, height/10);
+  spawners[2][2] = new Vec2(3*width/4, 2*height/10);
   
 
   coins = new ArrayList<Coin>();
-  int k = int(random(3,4));
+  int k = int(random(0,2));
   for (int c = 0; c < 6; c++) {
-    coins.add(new Coin(new Vec2(spawners[k].x + 25*c, spawners[k].y)));
+    coins.add(new Coin(new Vec2(spawners[2][k].x + 25*c, spawners[2][k].y)));
   }
   
   charges = new ArrayList<Charge>();
-  k = int(random(3,4));
-  charges.add(new Charge(spawners[k]));
+  k = int(random(0,2));
+  charges.add(new Charge(spawners[2][k]));
 
   keys = new Boolean[256];
   for (int i=0; i<keys.length; i++) {
@@ -112,10 +116,10 @@ void setup() {
   font = loadFont("PressStart2P-Regular-48.vlw");
 
 
-  jug = new Jugador(spawners[int(random(2))], "jugador", 8, 3, false);
+  jug = new Jugador(spawners[0][int(random(2))], "jugador", 8, 3, false);
   
-  enemigos.add(new Imagen(new Vec2(3*width/4, height/2 - 10), "imgEnemy", 8, 2, false));
-  enemigos.add(new Audio(new Vec2(width/4, height/2), "audEnemy", 19, 2, true));
+  enemigos.add(new Imagen(spawners[1][int(random(2))], "imgEnemy", 8, 2, false));
+  enemigos.add(new Audio(spawners[1][int(random(2))], "audEnemy", 19, 2, true));
 
   tex = loadImage("media/scenarios/textures/texture.png");
   RG.init(this);
@@ -134,7 +138,18 @@ void draw() {
   box2d.step(1/(frameRate * 2), 10, 10);
   shape(bg);
   surface.display();
-
+  
+  if(frameCount % 600 == 0){
+    println("Generando enemigos");
+    enemigos.add(new Imagen(spawners[1][int(random(2))], "imgEnemy", 8, 2, false));
+    enemigos.add(new Audio(spawners[1][int(random(2))], "audEnemy", 19, 2, true));
+    int k = int(random(3,4));
+    for (int c = 0; c < 6; c++) {
+      coins.add(new Coin(new Vec2(spawners[2][k].x + 25*c, spawners[2][k].y)));
+    }
+    k = int(random(3,4));
+    charges.add(new Charge(spawners[2][k]));
+  }
 
   for (int i=0; i<coins.size(); i++) {
     if (coins.get(i).show()) {
@@ -213,6 +228,8 @@ void beginContact(Contact cp) {
   Fixture f1 = cp.getFixtureA();
   Fixture f2 = cp.getFixtureB();
   
+  println(f1.getUserData() + " " + f2.getUserData());
+  
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("coin")) ||
     (f2.getUserData().equals("jugador") && f1.getUserData().equals("coin")) ) {
       Coin c;
@@ -262,12 +279,34 @@ void beginContact(Contact cp) {
           Bullet b2 = (Bullet) f1.getBody().getUserData();
           b2.delete();
         } else {
+          println(f1.getUserData() + " " + f2.getUserData());
           if(f1.getUserData().equals("jugador") || f1.getUserData().equals("enemigo")){
             Personaje e = (Personaje) f1.getBody().getUserData();
             e.takeDamage(b.damage);
           }
         }
       }
+      b.delete();
+    }
+  }
+  
+  if (f1.getUserData().equals("bulletAnimation")) {
+    Bullet b = (Bullet) f1.getBody().getUserData();
+
+    if (!f2.getUserData().equals(b.personaje)) {
+      if (!f2.getUserData().equals("suelo")) {
+        if (f2.getUserData().equals("bulletAnimation")) {
+          Bullet b2 = (Bullet) f2.getBody().getUserData();
+          b2.delete();
+        } else {
+          if(f2.getUserData().equals("jugador") || f2.getUserData().equals("enemigo")){
+            Personaje e = (Personaje) f2.getBody().getUserData();
+            e.takeDamage(b.damage);
+          }
+        }
+      }
+      b.delete();
+    }
     }
     b.delete();
 

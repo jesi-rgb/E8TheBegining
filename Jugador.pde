@@ -14,15 +14,14 @@ class Jugador extends Personaje {
     vidaMax = 100;
     vidaActual = 100;
     monedas = 0;
-    
+
     currentFrameAttack = 0;
-    
+
     attack = new PImage[NUM_SPRITES_ATTACK];
-    for(int i = 0; i < attack.length; i++){
+    for (int i = 0; i < attack.length; i++) {
       attack[i] = loadImage("media/jugador/attack/spr"+(i+1)+".png");
       attack[i].resize(int(attack[i].width * wRatio) + ANCHO_ATAQUE, int(attack[i].height * wRatio) + ALTO_ATAQUE);
     }
-    
   }
 
   void accion() {
@@ -74,7 +73,7 @@ class Jugador extends Personaje {
 
     //Si se pulsa space y no estamos en el aire, saltamos
     if ((keys[' '] || keys[UP_ARROW]) && !onAir) {
-      //jump.play();
+      jump.play();
       //estamos en el aire
       onAir=true;
       keys[32]=false; //Si lo descomentamos habrá que pulsar espacio cada vez que queramos saltar
@@ -87,7 +86,7 @@ class Jugador extends Personaje {
 
   void shoot() {
     if (keys['.'] && frameCount%5 == 0) {
-      //shoot.play();
+      shoot.play();
       Vec2 pos = box2d.getBodyPixelCoord(this.body);
       float sprWidth = sprites[0][0].width;
 
@@ -105,47 +104,48 @@ class Jugador extends Personaje {
     if (keyPressed) {
       if (keys[',']) {
         attackAnimation();
+        if (!meleeAttack.isPlaying())
+          meleeAttack.play();
         Vec2 pos = box2d.getBodyPixelCoord(this.body);
         if (currentDirection == LEFT) {
           for (int i=0; i<enemigos.size(); i++) {
             Vec2 posEnemy = box2d.getBodyPixelCoord(enemigos.get(i).body);
-            if(((posEnemy.x + enemigos.get(i).sprites[RIGHT][0].width/2) < (pos.x - ANCHO_ATAQUE/2)) &&
+            if (((posEnemy.x + enemigos.get(i).sprites[RIGHT][0].width/2) < (pos.x - ANCHO_ATAQUE/2)) &&
               (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 < (pos.y - ALTO_ATAQUE/2)) &&
               (posEnemy.y - enemigos.get(i).sprites[RIGHT][0].height/2 < (pos.y + ALTO_ATAQUE/2) &&
               (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 > (pos.y - ALTO_ATAQUE/2)))) {
-                enemigos.get(i).recibirGolpe(LEFT, 1000);
+              enemigos.get(i).recibirGolpe(LEFT, 1000);
             }
           }
         } else {
           for (int i=0; i<enemigos.size(); i++) {
             Vec2 posEnemy = box2d.getBodyPixelCoord(enemigos.get(i).body);
-            if(((posEnemy.x - enemigos.get(i).sprites[RIGHT][0].width/2) < (pos.x + ANCHO_ATAQUE/2)) &&
+            if (((posEnemy.x - enemigos.get(i).sprites[RIGHT][0].width/2) < (pos.x + ANCHO_ATAQUE/2)) &&
               (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 > (pos.y - ALTO_ATAQUE/2)) &&
               (posEnemy.y - enemigos.get(i).sprites[RIGHT][0].height/2 < (pos.y + ALTO_ATAQUE/2)) &&
               (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 > (pos.y - ALTO_ATAQUE/2))) {
-                enemigos.get(i).recibirGolpe(RIGHT, 1000);
+              enemigos.get(i).recibirGolpe(RIGHT, 1000);
             }
           }
           //rect(pos.x,  pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
-       }
+        }
+      } else {
+        meleeAttack.stop();
       }
     }
   }
-  
-  void attackAnimation(){
+
+  void attackAnimation() {
     Vec2 pos = box2d.getBodyPixelCoord(this.body);
-    
+
     image(attack[int(currentFrameAttack+=0.5)%NUM_SPRITES_ATTACK], pos.x, pos.y);
-    
-  }
-  
-  void incrementCoins(){
-    monedas++;
-  }
-  
-  int getCoins(){
-    return monedas;
   }
 
-  
+  void incrementCoins() {
+    monedas++;
+  }
+
+  int getCoins() {
+    return monedas;
+  }
 }

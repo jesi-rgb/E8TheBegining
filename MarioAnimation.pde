@@ -32,6 +32,7 @@ SoundFile bgMusic;
 SoundFile jump;
 SoundFile shoot;
 SoundFile intro;
+SoundFile meleeAttack;
 
 ArrayList<Coin> coins;
 
@@ -56,9 +57,9 @@ void setup() {
   //size(720, 480, P2D);
   frameRate(40);
   imageMode(CENTER);
-  
+
   wRatio = float(width) / FULLSCREEN_WIDTH;
-  
+
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
   box2d.setGravity(0, -700 * wRatio);
@@ -68,6 +69,10 @@ void setup() {
   //intro = new SoundFile(this, "media/music/intro.wav");
   jump = new SoundFile(this, "media/music/jump.wav");
   shoot = new SoundFile(this, "media/music/shoot.wav");
+  meleeAttack = new SoundFile(this, "media/music/melee.mp3");
+  meleeAttack.amp(0.2);
+  shoot.amp(0.2);
+  jump.amp(0.4);
   bgMusic.amp(0.4);
   //intro.amp(0.4);
   //shoot.amp(0.4);
@@ -86,7 +91,7 @@ void setup() {
 
   projectiles = new ArrayList<Bullet>();
   enemigos = new ArrayList<Enemigo>();
-  
+
   font = loadFont("PressStart2P-Regular-48.vlw");
 
 
@@ -114,10 +119,10 @@ void draw() {
   box2d.step(1/(frameRate * 2), 10, 10);
   shape(bg);
   surface.display();
-  
+
 
   for (int i=0; i<coins.size(); i++) {
-    if(coins.get(i).show()){
+    if (coins.get(i).show()) {
       coins.get(i).display();
     } else {
       Coin c = coins.get(i);
@@ -191,24 +196,22 @@ void beginContact(Contact cp) {
   Fixture f1 = cp.getFixtureA();
   Fixture f2 = cp.getFixtureB();
   
-  println(f1.getUserData(), f2.getUserData());
-
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("coin")) ||
     (f2.getUserData().equals("jugador") && f1.getUserData().equals("coin")) ) {
-      Coin c;
-      if (f1.getUserData().equals("coin")) {
-        c = (Coin) f1.getBody().getUserData();
-      } else {
-        c = (Coin) f2.getBody().getUserData();
-      }
-      c.get();
-      jug.incrementCoins();
+    Coin c;
+    if (f1.getUserData().equals("coin")) {
+      c = (Coin) f1.getBody().getUserData();
+    } else {
+      c = (Coin) f2.getBody().getUserData();
     }
-    
+    c.get();
+    jug.incrementCoins();
+  }
+
   if ((f1.getUserData().equals("bulletAnimation") && f2.getUserData().equals("coin")) ||
     (f2.getUserData().equals("bulletAnimation") && f1.getUserData().equals("coin")) ) {
-      //do absolutely nothing
-    }
+    //do absolutely nothing
+  }
 
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("enemigo")) ||
     (f2.getUserData().equals("jugador") && f1.getUserData().equals("enemigo")) ) {
@@ -231,7 +234,7 @@ void beginContact(Contact cp) {
           Bullet b2 = (Bullet) f1.getBody().getUserData();
           b2.delete();
         } else {
-          if(f1.getUserData().equals("Personaje")){
+          if (f1.getUserData().equals("Personaje")) {
             Personaje e = (Personaje) f1.getBody().getUserData();
             e.takeDamage(b.damage);
           }
@@ -258,4 +261,6 @@ void keyReleased() {
     keys[keyCode] = false;
   else
     keys[key] = false;
+
+  meleeAttack.stop();
 }

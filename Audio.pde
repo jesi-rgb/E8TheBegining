@@ -28,11 +28,11 @@ class Audio extends Enemigo{
     xInicial = center.x;
     yInicial = center.y;
     a = 0;
-    dist = 500;
+    dist = 300;
     
     vel = new Vec2(0,0);
     
-    vidaMax = 100;
+    vidaMax = 40;
     vidaActual = vidaMax;
   }
   

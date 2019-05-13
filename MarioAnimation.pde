@@ -22,9 +22,6 @@ PFont font;
 
 Box2DProcessing box2d;
 
-Terreno s;
-Terreno[] pared = new Terreno[2];
-Plataforma[] plataformas = new Plataforma[4];
 RShape grp;
 Scenario surface;
 
@@ -33,8 +30,11 @@ SoundFile jump;
 SoundFile shoot;
 SoundFile intro;
 SoundFile meleeAttack;
+SoundFile coin;
+SoundFile charge;
 
 ArrayList<Coin> coins;
+ArrayList<Charge> charges;
 
 Jugador jug;
 Vec2 jugPos;
@@ -42,7 +42,7 @@ Enemigo imgEnemy;
 Enemigo audEnemy;
 ArrayList<Bullet> projectiles;
 ArrayList<Enemigo> enemigos;
-
+Vec2[] spawners;
 
 PShape bg;
 PImage tex;
@@ -73,16 +73,33 @@ void setup() {
   meleeAttack.amp(0.2);
   shoot.amp(0.2);
   jump.amp(0.4);
+  coin = new SoundFile(this, "media/music/coin.wav");
+  charge = new SoundFile(this, "media/music/charge.mp3");
   bgMusic.amp(0.4);
   //intro.amp(0.4);
-  //shoot.amp(0.4);
+  shoot.amp(0.1);
+  coin.amp(0.2);
+  charge.amp(0.2);
   //intro.play();
   bgMusic.loop();
+  
+  spawners = new Vec2[5];
+  spawners[0] = new Vec2(width/4, height/11);
+  spawners[1] = new Vec2(3*width/4, height/2 - 10);
+  spawners[2] = new Vec2(width/4, height/2);
+  spawners[3] = new Vec2(3*width/4, height/10);
+  spawners[4] = new Vec2(3*width/4, 2*height/10);
+  
 
   coins = new ArrayList<Coin>();
-  for (int c = 0; c < 3; c++) {
-    coins.add(new Coin(new Vec2(3*width/4 + 25*c, height/10)));
+  int k = int(random(3,4));
+  for (int c = 0; c < 6; c++) {
+    coins.add(new Coin(new Vec2(spawners[k].x + 25*c, spawners[k].y)));
   }
+  
+  charges = new ArrayList<Charge>();
+  k = int(random(3,4));
+  charges.add(new Charge(spawners[k]));
 
   keys = new Boolean[256];
   for (int i=0; i<keys.length; i++) {
@@ -95,12 +112,10 @@ void setup() {
   font = loadFont("PressStart2P-Regular-48.vlw");
 
 
-  jug = new Jugador(new Vec2(width/4, height/11), "jugador", 8, 3, false);
-  imgEnemy = new Imagen(new Vec2(3*width/4, height/2 - 10), "imgEnemy", 8, 2, false); 
-  audEnemy = new Audio(new Vec2(width/4, height/2), "audEnemy", 19, 2, true);
-
-  enemigos.add(imgEnemy);
-  enemigos.add(audEnemy);
+  jug = new Jugador(spawners[int(random(2))], "jugador", 8, 3, false);
+  
+  enemigos.add(new Imagen(new Vec2(3*width/4, height/2 - 10), "imgEnemy", 8, 2, false));
+  enemigos.add(new Audio(new Vec2(width/4, height/2), "audEnemy", 19, 2, true));
 
   tex = loadImage("media/scenarios/textures/texture.png");
   RG.init(this);
@@ -130,15 +145,26 @@ void draw() {
       c.killBody();
     }
   }
+  
+  for (int i=0; i<charges.size(); i++) {
+    if(charges.get(i).show()){
+      charges.get(i).display();
+    } else {
+      Charge c = charges.get(i);
+      charges.remove(i);
+      c.killBody();
+    }
+  }
 
   //Jugador
   if (jug != null) {
-    if ( jug.vidaActual > 0 ) { //no sé como hacer esto mendorito ayuda
+    if ( jug.vidaActual > 0 ) {
       textSize(30);
       fill(0);
       textFont(font, 32);
       text(jug.vidaActual, 40, 40);
       text(jug.getCoins(), 150, 40);
+      text(jug.carga, 350, 40);
       jug.accion();
       jug.atacar(enemigos);
       jug.display();
@@ -158,25 +184,16 @@ void draw() {
   }
 
   //Enemigos
-  if (imgEnemy != null) {
-    if (imgEnemy.vidaActual > 0) {
-      imgEnemy.detectarJugador(jugPos);
-      imgEnemy.display();
+  for(int i = 0; i<enemigos.size(); i++){
+    if (enemigos.get(i).vidaActual > 0) {
+      enemigos.get(i).detectarJugador(jugPos);
+      enemigos.get(i).display();
     } else {
-      enemigos.remove(imgEnemy);
-      imgEnemy.killBody();
-      imgEnemy = null;
-    }
-  }
-
-  if (audEnemy != null) {
-    if (audEnemy.vidaActual > 0) {
-      audEnemy.detectarJugador(jugPos);
-      audEnemy.display();
-    } else {
-      enemigos.remove(audEnemy);
-      audEnemy.killBody();
-      audEnemy = null;
+      if(jug != null){
+        jug.incrementCoins(100);
+      }
+      enemigos.get(i).killBody();
+      enemigos.remove(i);
     }
   }
 
@@ -198,19 +215,30 @@ void beginContact(Contact cp) {
   
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("coin")) ||
     (f2.getUserData().equals("jugador") && f1.getUserData().equals("coin")) ) {
-    Coin c;
-    if (f1.getUserData().equals("coin")) {
-      c = (Coin) f1.getBody().getUserData();
+      Coin c;
+      if (f1.getUserData().equals("coin")) {
+        c = (Coin) f1.getBody().getUserData();
+      } else {
+        c = (Coin) f2.getBody().getUserData();
+      }
+      jug.incrementCoins(c.get());
+      coin.play();
+    }
+    
+  if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("charge")) ||
+  (f2.getUserData().equals("jugador") && f1.getUserData().equals("charge")) ) {
+    Charge c;
+    if (f1.getUserData().equals("charge")) {
+      c = (Charge) f1.getBody().getUserData();
     } else {
-      c = (Coin) f2.getBody().getUserData();
+      c = (Charge) f2.getBody().getUserData();
     }
     c.get();
-    jug.incrementCoins();
-  }
-
-  if ((f1.getUserData().equals("bulletAnimation") && f2.getUserData().equals("coin")) ||
-    (f2.getUserData().equals("bulletAnimation") && f1.getUserData().equals("coin")) ) {
-    //do absolutely nothing
+    if(jug.vidaActual + 20 <= jug.vidaMax){
+      jug.vidaActual += 20;
+    } else jug.vidaActual = jug.vidaMax;
+    jug.recargar();
+    charge.play();
   }
 
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("enemigo")) ||
@@ -234,7 +262,7 @@ void beginContact(Contact cp) {
           Bullet b2 = (Bullet) f1.getBody().getUserData();
           b2.delete();
         } else {
-          if (f1.getUserData().equals("Personaje")) {
+          if(f1.getUserData().equals("jugador") || f1.getUserData().equals("enemigo")){
             Personaje e = (Personaje) f1.getBody().getUserData();
             e.takeDamage(b.damage);
           }
@@ -261,6 +289,4 @@ void keyReleased() {
     keys[keyCode] = false;
   else
     keys[key] = false;
-
-  meleeAttack.stop();
 }

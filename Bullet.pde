@@ -10,7 +10,7 @@ class Bullet extends Personaje {
     super(origin, "xboxanimation", 7, 2, true);
     direction = dest;
     delete = false;
-    damage = 10;
+    damage = 20;
     personaje = pers;
   }
 

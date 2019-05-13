@@ -1,26 +1,18 @@
-static int id = 0;
-
-class Coin {
+class Charge {
 
   Vec2 position;
   int value;
   PImage sprite;
   Body body;
-  boolean up;
-  boolean oddCoin;
   boolean display;
 
-  Coin(Vec2 p) {
+  Charge(Vec2 p) {
     position = p;
-    value = 10;
-    sprite = loadImage("media/scenarios/coins/coin1.png");
-    if(id%2 == 0){
-      up = false;
-    } else up = true;
+    value = 20;
+    sprite = loadImage("media/scenarios/charge/spr1.png");
     display = true;
     
     makeBody(position, false);
-    id++;
   }
   
   void makeBody(Vec2 center, boolean flotante) {
@@ -44,7 +36,7 @@ class Coin {
 
     //Define a fixture
     FixtureDef fd = new FixtureDef();
-    fd.setUserData("coin");
+    fd.setUserData("charge");
     fd.shape = boundingBox;
     fd.density = 1;
     fd.friction = 0.1;
@@ -56,23 +48,8 @@ class Coin {
   }
 
   void display() {
-    
     Vec2 pos = box2d.getBodyPixelCoord(this.body);
-    
-    if(frameCount % 30 == 0){
-      if(up){
-        pos.y += 10;
-        up = false;
-      } else {
-        pos.y -= 10;
-        up = true;
-      }
-      //up = !up;
-    }
-    
-    tint(0, 255, 255, 255);
     image(sprite, pos.x, pos.y);
-    noTint();
   }
   
   void killBody() {

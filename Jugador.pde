@@ -107,25 +107,25 @@ class Jugador extends Personaje {
         if (currentDirection == LEFT) {
           for (int i=0; i<enemigos.size(); i++) {
             Vec2 posEnemy = box2d.getBodyPixelCoord(enemigos.get(i).body);
-            if (((posEnemy.x + enemigos.get(i).sprites[RIGHT][0].width/2) > (pos.x - ANCHO_ATAQUE/2)) &&
-              (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 > (pos.y - ALTO_ATAQUE/2)) &&
-              (posEnemy.y - enemigos.get(i).sprites[RIGHT][0].height/2 < (posEnemy.y + ALTO_ATAQUE/2))) {
-              enemigos.get(i).recibirGolpe(LEFT, 20);
+            if(((posEnemy.x + enemigos.get(i).sprites[RIGHT][0].width/2) < (pos.x - ANCHO_ATAQUE/2)) &&
+              (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 < (pos.y - ALTO_ATAQUE/2)) &&
+              (posEnemy.y - enemigos.get(i).sprites[RIGHT][0].height/2 < (pos.y + ALTO_ATAQUE/2) &&
+              (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 > (pos.y - ALTO_ATAQUE/2)))) {
+                enemigos.get(i).recibirGolpe(LEFT, 20);
             }
           }
-          //rect(pos.x, pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
         } else {
           for (int i=0; i<enemigos.size(); i++) {
             Vec2 posEnemy = box2d.getBodyPixelCoord(enemigos.get(i).body);
-            if (((posEnemy.x - enemigos.get(i).sprites[RIGHT][0].width/2) < (pos.x + ANCHO_ATAQUE/2)) &&
+            if(((posEnemy.x - enemigos.get(i).sprites[RIGHT][0].width/2) < (pos.x + ANCHO_ATAQUE/2)) &&
               (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 > (pos.y - ALTO_ATAQUE/2)) &&
-              (posEnemy.y - enemigos.get(i).sprites[RIGHT][0].height/2 < (posEnemy.y + ALTO_ATAQUE/2))) {
-              enemigos.get(i).recibirGolpe(RIGHT, 20);
+              (posEnemy.y - enemigos.get(i).sprites[RIGHT][0].height/2 < (pos.y + ALTO_ATAQUE/2)) &&
+              (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 > (pos.y - ALTO_ATAQUE/2))) {
+                enemigos.get(i).recibirGolpe(RIGHT, 20);
             }
           }
           //rect(pos.x,  pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
-        }
-      }
+}
     }
   }
   

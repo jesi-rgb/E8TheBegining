@@ -146,7 +146,7 @@ void draw() {
       imgEnemy.detectarJugador(jugPos);
       imgEnemy.display();
     } else {
-      //print("Rip imagen");
+      enemigos.remove(imgEnemy);
       imgEnemy.killBody();
       imgEnemy = null;
     }
@@ -157,6 +157,7 @@ void draw() {
       audEnemy.detectarJugador(jugPos);
       audEnemy.display();
     } else {
+      enemigos.remove(audEnemy);
       audEnemy.killBody();
       audEnemy = null;
     }

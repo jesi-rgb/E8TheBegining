@@ -12,6 +12,7 @@ class Bullet extends Personaje {
     delete = false;
     damage = 20;
     personaje = pers;
+    body.getFixtureList().setUserData("bulletAnimation");
   }
 
   void mover() {

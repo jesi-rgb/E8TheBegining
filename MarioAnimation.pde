@@ -93,7 +93,9 @@ void setup() {
   jug = new Jugador(new Vec2(width/4, height/11), "jugador", 8, 3, false);
   imgEnemy = new Imagen(new Vec2(3*width/4, height/2 - 10), "imgEnemy", 8, 2, false); 
   audEnemy = new Audio(new Vec2(width/4, height/2), "audEnemy", 19, 2, true);
-
+  
+  enemigos.add(imgEnemy);
+  enemigos.add(audEnemy);
 
   tex = loadImage("media/scenarios/textures/texture.png");
   RG.init(this);
@@ -228,8 +230,10 @@ void beginContact(Contact cp) {
           Bullet b2 = (Bullet) f1.getBody().getUserData();
           b2.delete();
         } else {
-          Personaje e = (Personaje) f1.getBody().getUserData();
-          e.takeDamage(b.damage);
+          if(f1.getUserData().equals("Personaje")){
+            Personaje e = (Personaje) f1.getBody().getUserData();
+            e.takeDamage(b.damage);
+          }
         }
       }
     }

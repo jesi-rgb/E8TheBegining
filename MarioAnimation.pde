@@ -17,8 +17,8 @@ final static int DOWN_ARROW = 40;
 final int FULLSCREEN_WIDTH = 1920;
 final int FULLSCREEN_HEIGHT = 1080;
 
+float wRatio;
 PFont font;
-
 
 Box2DProcessing box2d;
 
@@ -52,14 +52,16 @@ void setup() {
 
   //fullScreen(P2D);
   //size(1366, 768, P2D);
-  size(1280, 720, P2D);
+  size(1280, 400, P2D);
   //size(720, 480, P2D);
   frameRate(40);
   imageMode(CENTER);
-
+  
+  wRatio = float(width) / FULLSCREEN_WIDTH;
+  
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
-  box2d.setGravity(0, -700);
+  box2d.setGravity(0, -700 * wRatio);
   box2d.listenForCollisions();
 
   //bgMusic = new SoundFile(this, "media/music/bgMusic.wav");
@@ -72,10 +74,10 @@ void setup() {
   //intro.play();
   //bgMusic.loop();
 
-  //coins = new ArrayList<Coin>();
-  //for (int c = 0; c < 3; c++) {
-  //  coins.add(new Coin(new Vec2(width/4 + 25*c, height/6)));
-  //}
+  coins = new ArrayList<Coin>();
+  for (int c = 0; c < 3; c++) {
+    coins.add(new Coin(new Vec2(width/4 + 25*c, height/6)));
+  }
 
   keys = new Boolean[256];
   for (int i=0; i<keys.length; i++) {
@@ -112,9 +114,15 @@ void draw() {
   surface.display();
   
 
-  //for (Coin c : coins) {
-  //  c.display();
-  //}
+  for (int i=0; i<coins.size(); i++) {
+    if(coins.get(i).show()){
+      coins.get(i).display();
+    } else {
+      Coin c = coins.get(i);
+      coins.remove(i);
+      c.killBody();
+    }
+  }
 
   //Jugador
   if (jug != null) {
@@ -123,6 +131,7 @@ void draw() {
       fill(0);
       textFont(font, 32);
       text(jug.vidaActual, 40, 40);
+      text(jug.getCoins(), 150, 40);
       jug.accion();
       jug.atacar(enemigos);
       jug.display();
@@ -147,7 +156,7 @@ void draw() {
       imgEnemy.detectarJugador(jugPos);
       imgEnemy.display();
     } else {
-      //print("Rip imagen");
+      enemigos.remove(imgEnemy);
       imgEnemy.killBody();
       imgEnemy = null;
     }
@@ -158,6 +167,7 @@ void draw() {
       audEnemy.detectarJugador(jugPos);
       audEnemy.display();
     } else {
+      enemigos.remove(audEnemy);
       audEnemy.killBody();
       audEnemy = null;
     }
@@ -187,8 +197,8 @@ void beginContact(Contact cp) {
       } else {
         c = (Coin) f2.getBody().getUserData();
       }
-      c.killBody();
-      
+      c.get();
+      jug.incrementCoins();
     }
 
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("enemigo")) ||

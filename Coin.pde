@@ -6,12 +6,14 @@ class Coin {
   Body body;
   boolean up;
   boolean oddCoin;
+  boolean display;
 
   Coin(Vec2 p) {
     position = p;
     value = 10;
     sprite = loadImage("media/scenarios/coins/coin1.png");
     oddCoin = random(0, 1) < 0.2;
+    display = true;
     
     makeBody(position, false);
   }
@@ -68,5 +70,13 @@ class Coin {
   
   void killBody() {
     box2d.destroyBody(body);
+  }
+  
+  void get(){
+    display = false;
+  }
+  
+  boolean show(){
+    return display;
   }
 }

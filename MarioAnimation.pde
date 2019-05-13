@@ -72,10 +72,10 @@ void setup() {
   //delay(int(intro.duration())*1000);
   //bgMusic.loop();
 
-  //coins = new ArrayList<Coin>();
-  //for (int c = 0; c < 3; c++) {
-  //  coins.add(new Coin(new Vec2(width/4 + 25*c, height/6)));
-  //}
+  coins = new ArrayList<Coin>();
+  for (int c = 0; c < 3; c++) {
+    coins.add(new Coin(new Vec2(width/4 + 25*c, height/6)));
+  }
 
   keys = new Boolean[256];
   for (int i=0; i<keys.length; i++) {
@@ -109,9 +109,15 @@ void draw() {
   shape(bg);
   surface.display();
 
-  //for (Coin c : coins) {
-  //  c.display();
-  //}
+  for (int i=0; i<coins.size(); i++) {
+    if(coins.get(i).show()){
+      coins.get(i).display();
+    } else {
+      Coin c = coins.get(i);
+      coins.remove(i);
+      c.killBody();
+    }
+  }
 
   //Jugador
   if (jug != null) {
@@ -121,6 +127,7 @@ void draw() {
       textSize(30);
       fill(0);
       text(jug.vidaActual, 40, 40);
+      text(jug.getCoins(), 150, 40);
       jug.accion();
       jug.atacar(enemigos);
       jug.display();
@@ -181,15 +188,15 @@ void beginContact(Contact cp) {
 
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("coin")) ||
     (f2.getUserData().equals("jugador") && f1.getUserData().equals("coin")) ) {
+      println("Contacto moneda");
       Coin c;
       if (f1.getUserData().equals("coin")) {
         c = (Coin) f1.getBody().getUserData();
       } else {
         c = (Coin) f2.getBody().getUserData();
       }
-      println("AaaAS");
-      c.killBody();
-      
+      c.get();
+      jug.incrementCoins();
     }
 
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("enemigo")) ||

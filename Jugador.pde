@@ -4,6 +4,7 @@ class Jugador extends Personaje {
   int ANCHO_ATAQUE = 100;
   int NUM_SPRITES_ATTACK = 11;
   float currentFrameAttack;
+  int monedas;
 
   PImage[] attack;
 
@@ -12,6 +13,7 @@ class Jugador extends Personaje {
     preVelY = body.getLinearVelocity().y;
     vidaMax = 100;
     vidaActual = 100;
+    monedas = 0;
     
     currentFrameAttack = 0;
     
@@ -125,7 +127,8 @@ class Jugador extends Personaje {
             }
           }
           //rect(pos.x,  pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
-}
+       }
+      }
     }
   }
   
@@ -135,7 +138,14 @@ class Jugador extends Personaje {
     image(attack[int(currentFrameAttack+=0.5)%NUM_SPRITES_ATTACK], pos.x, pos.y);
     
   }
-
+  
+  void incrementCoins(){
+    monedas++;
+  }
+  
+  int getCoins(){
+    return monedas;
+  }
 
   
 }

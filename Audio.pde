@@ -15,7 +15,7 @@ class Audio extends Enemigo{
     super(center, spriteDirectory, numSpr, numSts, flotante);
     
     
-    ANCHO_VISION = 1000;
+    ANCHO_VISION = 500;
     ALTO_VISION = 500;
     
     preVel = body.getLinearVelocity().y;

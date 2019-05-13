@@ -5,7 +5,7 @@ class Imagen extends Enemigo{
     
     umbralMovimiento = 0.98;
     umbralParada = 0.8;
-    ANCHO_VISION = 1000;
+    ANCHO_VISION = 100;
     ALTO_VISION = 500;
     
     vidaMax = 200;
@@ -68,8 +68,6 @@ class Imagen extends Enemigo{
       }
     }
   }
-  
-  
   
   void killBody() {
     box2d.destroyBody(body);

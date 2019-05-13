@@ -51,8 +51,8 @@ Boolean[] keys;
 void setup() {
 
   //fullScreen(P2D);
-  //size(1366, 768, P2D);
-  size(1280, 400, P2D);
+  size(1366, 768, P2D);
+  //size(720, 480, P2D);
   //size(720, 480, P2D);
   frameRate(40);
   imageMode(CENTER);
@@ -64,19 +64,19 @@ void setup() {
   box2d.setGravity(0, -700 * wRatio);
   box2d.listenForCollisions();
 
-  //bgMusic = new SoundFile(this, "media/music/bgMusic.wav");
+  bgMusic = new SoundFile(this, "media/music/bgMusic.wav");
   //intro = new SoundFile(this, "media/music/intro.wav");
-  //jump = new SoundFile(this, "media/music/jump.wav");
-  //shoot = new SoundFile(this, "media/music/shoot.wav");
-  //bgMusic.amp(0.4);
+  jump = new SoundFile(this, "media/music/jump.wav");
+  shoot = new SoundFile(this, "media/music/shoot.wav");
+  bgMusic.amp(0.4);
   //intro.amp(0.4);
   //shoot.amp(0.4);
   //intro.play();
-  //bgMusic.loop();
+  bgMusic.loop();
 
   coins = new ArrayList<Coin>();
   for (int c = 0; c < 3; c++) {
-    coins.add(new Coin(new Vec2(width/4 + 25*c, height/6)));
+    coins.add(new Coin(new Vec2(3*width/4 + 25*c, height/10)));
   }
 
   keys = new Boolean[256];
@@ -90,9 +90,9 @@ void setup() {
   font = loadFont("PressStart2P-Regular-48.vlw");
 
 
-  jug = new Jugador(new Vec2(width/4, height/9), "jugador", 8, 3, false);
-  //imgEnemy = new Imagen(new Vec2(width/4, height/2), "imgEnemy", 8, 2, false);
-  //audEnemy = new Audio(new Vec2(3*width/4, height/2 - 10), "audEnemy", 19, 2, true);
+  jug = new Jugador(new Vec2(width/4, height/11), "jugador", 8, 3, false);
+  imgEnemy = new Imagen(new Vec2(3*width/4, height/2 - 10), "imgEnemy", 8, 2, false); 
+  audEnemy = new Audio(new Vec2(width/4, height/2), "audEnemy", 19, 2, true);
 
 
   tex = loadImage("media/scenarios/textures/texture.png");
@@ -126,7 +126,7 @@ void draw() {
 
   //Jugador
   if (jug != null) {
-    if ( !(jug.vidaActual <= 0 || jug.outOfBounds()) ) { //no sé como hacer esto mendorito ayuda
+    if ( jug.vidaActual > 0 ) { //no sé como hacer esto mendorito ayuda
       textSize(30);
       fill(0);
       textFont(font, 32);
@@ -142,17 +142,18 @@ void draw() {
       jugPos = new Vec2(10000, 10000);
     }
   } else {
-    textSize(78);
+    textSize(28);
     fill(0);
     textAlign(CENTER);
-    text("Has muerto", width/2, height/2);
+    text("Array index out of bounds", width/2, height/2);
     bgMusic.stop();
+    delay(3000);
     setup();
   }
 
   //Enemigos
   if (imgEnemy != null) {
-    if (imgEnemy.vidaActual > 0 && !imgEnemy.outOfBounds()) {
+    if (imgEnemy.vidaActual > 0) {
       imgEnemy.detectarJugador(jugPos);
       imgEnemy.display();
     } else {
@@ -163,7 +164,7 @@ void draw() {
   }
 
   if (audEnemy != null) {
-    if (audEnemy.vidaActual > 0 && !audEnemy.outOfBounds()) {
+    if (audEnemy.vidaActual > 0) {
       audEnemy.detectarJugador(jugPos);
       audEnemy.display();
     } else {
@@ -199,6 +200,11 @@ void beginContact(Contact cp) {
       }
       c.get();
       jug.incrementCoins();
+    }
+    
+  if ((f1.getUserData().equals("bulletAnimation") && f2.getUserData().equals("coin")) ||
+    (f2.getUserData().equals("bulletAnimation") && f1.getUserData().equals("coin")) ) {
+      //do absolutely nothing
     }
 
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("enemigo")) ||

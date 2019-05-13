@@ -7,7 +7,7 @@ class Bullet extends Personaje {
   float a;
 
   Bullet(Vec2 origin, Vec2 dest, String pers) {
-    super(origin, "bulletAnimation", 9, 2, true);
+    super(origin, "bulletAnimation", 7, 2, true);
     direction = dest;
     delete = false;
     damage = 10;
@@ -47,8 +47,11 @@ class Bullet extends Personaje {
   }
 
   void display() {
+    Vec2 pos = box2d.getBodyPixelCoord(body);
     currentFrame = (currentFrame + 1) % (NUM_SPRITES-1);
     pushMatrix();
+    translate(pos.x,pos.y);
+    rotate(a);
     image(sprites[currentDirection][1+int(currentFrame)], 0, 0);
     popMatrix();
   }

@@ -80,6 +80,9 @@ abstract class Personaje {
   void display() {
 
     Vec2 pos = box2d.getBodyPixelCoord(body);
+    if(pos.y > height){
+      outOfBounds();
+    }
     currentFrame = (currentFrame + 1) % (NUM_SPRITES-1);
     Vec2 vel = body.getLinearVelocity();
 
@@ -156,13 +159,7 @@ abstract class Personaje {
     box2d.destroyBody(body);
   }
 
-  boolean outOfBounds() {
-    //println("4");
-    if (body != null) {
-      Vec2 pos = box2d.getBodyPixelCoord(this.body);
-      //println((pos.y > height + jug.sprites[RIGHT][0].height));
-      return (pos.y > height + jug.sprites[RIGHT][0].height);
-    }
-    return true;
+  void outOfBounds() {
+    vidaActual = -1;
   }
 }

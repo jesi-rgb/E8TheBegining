@@ -114,8 +114,8 @@ void setup() {
 
   jug = new Jugador(spawners[int(random(2))], "jugador", 8, 3, false);
   
-  enemigos.add(new Imagen(new Vec2(3*width/4, height/2 - 10), "imgEnemy", 8, 2, false));
-  enemigos.add(new Audio(new Vec2(width/4, height/2), "audEnemy", 19, 2, true));
+  enemigos.add(new Imagen(spawners[int(random(2))], "imgEnemy", 8, 2, false));
+  enemigos.add(new Audio(spawners[int(random(2))], "audEnemy", 19, 2, true));
 
   tex = loadImage("media/scenarios/textures/texture.png");
   RG.init(this);
@@ -134,7 +134,18 @@ void draw() {
   box2d.step(1/(frameRate * 2), 10, 10);
   shape(bg);
   surface.display();
-
+  
+  if(frameCount % 600 == 0){
+    println("Generando enemigos");
+    enemigos.add(new Imagen(spawners[int(random(2))], "imgEnemy", 8, 2, false));
+    enemigos.add(new Audio(spawners[int(random(2))], "audEnemy", 19, 2, true));
+    int k = int(random(3,4));
+    for (int c = 0; c < 6; c++) {
+      coins.add(new Coin(new Vec2(spawners[k].x + 25*c, spawners[k].y)));
+    }
+    k = int(random(3,4));
+    charges.add(new Charge(spawners[k]));
+  }
 
   for (int i=0; i<coins.size(); i++) {
     if (coins.get(i).show()) {
@@ -213,6 +224,8 @@ void beginContact(Contact cp) {
   Fixture f1 = cp.getFixtureA();
   Fixture f2 = cp.getFixtureB();
   
+  println(f1.getUserData() + " " + f2.getUserData());
+  
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("coin")) ||
     (f2.getUserData().equals("jugador") && f1.getUserData().equals("coin")) ) {
       Coin c;
@@ -262,14 +275,34 @@ void beginContact(Contact cp) {
           Bullet b2 = (Bullet) f1.getBody().getUserData();
           b2.delete();
         } else {
+          println(f1.getUserData() + " " + f2.getUserData());
           if(f1.getUserData().equals("jugador") || f1.getUserData().equals("enemigo")){
             Personaje e = (Personaje) f1.getBody().getUserData();
             e.takeDamage(b.damage);
           }
         }
       }
+      b.delete();
     }
-    b.delete();
+  }
+  
+  if (f1.getUserData().equals("bulletAnimation")) {
+    Bullet b = (Bullet) f1.getBody().getUserData();
+
+    if (!f2.getUserData().equals(b.personaje)) {
+      if (!f2.getUserData().equals("suelo")) {
+        if (f2.getUserData().equals("bulletAnimation")) {
+          Bullet b2 = (Bullet) f2.getBody().getUserData();
+          b2.delete();
+        } else {
+          if(f2.getUserData().equals("jugador") || f2.getUserData().equals("enemigo")){
+            Personaje e = (Personaje) f2.getBody().getUserData();
+            e.takeDamage(b.damage);
+          }
+        }
+      }
+      b.delete();
+    }
   }
 }
 

@@ -156,5 +156,4 @@ class Jugador extends Personaje {
     carga = cargaMax;
   }
 
-  }
 }

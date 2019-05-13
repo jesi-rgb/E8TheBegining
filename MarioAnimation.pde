@@ -9,7 +9,6 @@ import geomerative.*;
 import processing.sound.*;
 
 
-
 final static int LEFT = 0, RIGHT = 1;
 final static int LEFT_ARROW = 37;
 final static int UP_ARROW = 38;
@@ -17,6 +16,8 @@ final static int RIGHT_ARROW = 39;
 final static int DOWN_ARROW = 40;
 final int FULLSCREEN_WIDTH = 1920;
 final int FULLSCREEN_HEIGHT = 1080;
+
+PFont font;
 
 
 Box2DProcessing box2d;
@@ -69,7 +70,6 @@ void setup() {
   //intro.amp(0.4);
   //shoot.amp(0.4);
   //intro.play();
-  //delay(int(intro.duration())*1000);
   //bgMusic.loop();
 
   //coins = new ArrayList<Coin>();
@@ -84,6 +84,8 @@ void setup() {
 
   projectiles = new ArrayList<Bullet>();
   enemigos = new ArrayList<Enemigo>();
+  
+  font = loadFont("PressStart2P-Regular-48.vlw");
 
 
   jug = new Jugador(new Vec2(width/4, height/9), "jugador", 8, 3, false);
@@ -94,7 +96,7 @@ void setup() {
   tex = loadImage("media/scenarios/textures/texture.png");
   RG.init(this);
   RG.setPolygonizer(RG.ADAPTATIVE);
-  grp = RG.loadShape("media/scenarios/level2.svg");
+  grp = RG.loadShape("media/scenarios/level2noise.svg");
   grp.scale(width/grp.width);
 
   RPoint[] points = grp.getPoints();
@@ -108,6 +110,7 @@ void draw() {
   box2d.step(1/(frameRate * 2), 10, 10);
   shape(bg);
   surface.display();
+  
 
   //for (Coin c : coins) {
   //  c.display();
@@ -115,18 +118,16 @@ void draw() {
 
   //Jugador
   if (jug != null) {
-    //println("1");
     if ( !(jug.vidaActual <= 0 || jug.outOfBounds()) ) { //no sé como hacer esto mendorito ayuda
-      //println("2");
       textSize(30);
       fill(0);
+      textFont(font, 32);
       text(jug.vidaActual, 40, 40);
       jug.accion();
       jug.atacar(enemigos);
       jug.display();
       jugPos = box2d.getBodyPixelCoord(jug.body);
     } else {
-      //println("3");
       jug.killBody();
       jug = null;
       jugPos = new Vec2(10000, 10000);
@@ -136,7 +137,7 @@ void draw() {
     fill(0);
     textAlign(CENTER);
     text("Has muerto", width/2, height/2);
-    //bgMusic.stop();
+    bgMusic.stop();
     setup();
   }
 
@@ -186,7 +187,6 @@ void beginContact(Contact cp) {
       } else {
         c = (Coin) f2.getBody().getUserData();
       }
-      println("AaaAS");
       c.killBody();
       
     }

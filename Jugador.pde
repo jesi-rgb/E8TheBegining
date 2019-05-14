@@ -1,7 +1,7 @@
 class Jugador extends Personaje {
   float preVelY;
-  int ALTO_ATAQUE = int(sprites[RIGHT][0].height + 50 * wRatio);
-  int ANCHO_ATAQUE = int(200 * wRatio);
+  int ALTO_ATAQUE = int(sprites[RIGHT][0].height * wRatio + 10);
+  int ANCHO_ATAQUE = int(100 * wRatio);
   int NUM_SPRITES_ATTACK = 11;
   float currentFrameAttack;
   int puntuacion;
@@ -15,7 +15,7 @@ class Jugador extends Personaje {
     preVelY = body.getLinearVelocity().y;
     vidaActual = 100;
     vidaMax = vidaActual;
-    carga = 50;
+    carga = 100;
     cargaMax = carga;
     puntuacion = 0;
 
@@ -69,11 +69,13 @@ class Jugador extends Personaje {
 
   void jump() {
     Vec2 vel = body.getLinearVelocity();
-    float diff =  vel.y - preVelY;
 
-    if (abs(diff)>3) {
-      onAir=true;
-    } else onAir = false;
+    
+    //float diff =  vel.y - preVelY;
+
+   // if (abs(diff)>3) {
+   //   onAir=true;
+   // } else onAir = false;
 
     //Si se pulsa space y no estamos en el aire, saltamos
     if ((keys[' '] || keys[UP_ARROW] || keys['w']) && !onAir) {
@@ -89,7 +91,7 @@ class Jugador extends Personaje {
   }
 
   void shoot() {
-    if (keys['.'] && frameCount%15 == 0) {
+    if (keys['.'] && frameCount%10 == 0) {
       shoot.play();
       Vec2 pos = box2d.getBodyPixelCoord(this.body);
       float sprWidth = sprites[0][0].width;

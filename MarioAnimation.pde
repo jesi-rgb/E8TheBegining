@@ -56,9 +56,9 @@ Boolean[] keys;
 
 void setup() {
 
-  fullScreen(P2D);
+  //fullScreen(P2D);
   //size(1366, 768, P2D);
-  //size(720, 480, P2D);
+  size(1280, 720, P2D);
   //size(720, 480, P2D);
   frameRate(40);
   imageMode(CENTER);
@@ -89,8 +89,8 @@ void setup() {
   coin.amp(0.2);
   charge.amp(0.2);
   bgMusic.loop();
-
-  spawners = new Vec2[3][3];
+  
+  spawners = new Vec2[4][3];
   spawners[0][0] = new Vec2(2*width/4, height/11);
   spawners[0][1] = new Vec2(width/4, height/2);
   spawners[0][2] = new Vec2(width/4, height/4);
@@ -100,7 +100,10 @@ void setup() {
   spawners[2][0] = new Vec2(width/4, height/2);
   spawners[2][1] = new Vec2(3*width/4, height/10);
   spawners[2][2] = new Vec2(3*width/4, 2*height/10);
-
+  spawners[3][0] = new Vec2(width/2, height/10);
+  spawners[3][1] = new Vec2(3*width/4, height/2);
+  spawners[3][2] = new Vec2(3*width/4, 2*height/5);
+  
 
   coins = new ArrayList<Coin>();
   int k = int(random(0, 2));
@@ -109,8 +112,8 @@ void setup() {
   }
 
   charges = new ArrayList<Charge>();
-  k = int(random(0, 2));
-  charges.add(new Charge(spawners[2][k]));
+  k = int(random(0,2));
+  charges.add(new Charge(spawners[3][k]));
 
   keys = new Boolean[256];
   for (int i=0; i<keys.length; i++) {
@@ -373,7 +376,25 @@ void logicaEnemigos() {
 void beginContact(Contact cp) {
   Fixture f1 = cp.getFixtureA();
   Fixture f2 = cp.getFixtureB();
-
+  
+  if(f1.getUserData().equals("jugador")){
+    Jugador j = (Jugador) f1.getBody().getUserData();
+    if(f2.getUserData().equals("suelo") || f2.getUserData().equals("enemigo")){
+      j.onAir = false;
+    } else {
+      j.onAir=true;
+    }
+  }
+  
+  if(f2.getUserData().equals("jugador")){
+    Jugador j = (Jugador) f2.getBody().getUserData();
+    if(f1.getUserData().equals("suelo") || f1.getUserData().equals("enemigo")){
+      j.onAir = false;
+    } else {
+      j.onAir=true;
+    }
+  }
+  
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("coin")) ||
     (f2.getUserData().equals("jugador") && f1.getUserData().equals("coin")) ) {
     Coin c;
@@ -423,8 +444,7 @@ void beginContact(Contact cp) {
           Bullet b2 = (Bullet) f1.getBody().getUserData();
           b2.delete();
         } else {
-          println(f1.getUserData() + " " + f2.getUserData());
-          if (f1.getUserData().equals("jugador") || f1.getUserData().equals("enemigo")) {
+          if(f1.getUserData().equals("jugador") || f1.getUserData().equals("enemigo")){
             Personaje e = (Personaje) f1.getBody().getUserData();
             e.takeDamage(b.damage);
           }

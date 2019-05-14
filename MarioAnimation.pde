@@ -84,8 +84,7 @@ void setup() {
   bgMusic.amp(0.4);
   meleeAttack.amp(0.2);
   shoot.amp(0.4);
-  jump.amp(0.4);
-  shoot.amp(0.1);
+  jump.amp(0.9);
   coin.amp(0.2);
   charge.amp(0.2);
   bgMusic.loop();
@@ -108,7 +107,7 @@ void setup() {
   coins = new ArrayList<Coin>();
   int k = int(random(0, 2));
   for (int c = 0; c < 6; c++) {
-    coins.add(new Coin(new Vec2(spawners[2][k].x + 25*c, spawners[2][k].y)));
+    coins.add(new Coin(new Vec2(spawners[2][k].x + 50*c, spawners[2][k].y)));
   }
 
   charges = new ArrayList<Charge>();

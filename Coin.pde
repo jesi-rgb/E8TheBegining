@@ -13,16 +13,20 @@ class Coin {
   Coin(Vec2 p) {
     position = p;
     value = 10;
-    sprite = loadImage("media/scenarios/coins/coin1.png");
-    if(id%2 == 0){
+    if (id%2 == 0) {
       up = false;
-    } else up = true;
+      sprite = loadImage("media/scenarios/coins/coin0.png");
+    } else {
+      sprite = loadImage("media/scenarios/coins/coin1.png");
+      up = true;
+    }
     display = true;
     
+
     makeBody(position, false);
     id++;
   }
-  
+
   void makeBody(Vec2 center, boolean flotante) {
     //Define a body
     BodyDef bd = new BodyDef();
@@ -56,11 +60,11 @@ class Coin {
   }
 
   void display() {
-    
+
     Vec2 pos = box2d.getBodyPixelCoord(this.body);
-    
-    if(frameCount % 30 == 0){
-      if(up){
+
+    if (frameCount % 30 == 0) {
+      if (up) {
         pos.y += 10;
         up = false;
       } else {
@@ -69,22 +73,22 @@ class Coin {
       }
       //up = !up;
     }
-    
+
     tint(0, 255, 255, 255);
     image(sprite, pos.x, pos.y);
     noTint();
   }
-  
+
   void killBody() {
     box2d.destroyBody(body);
   }
-  
-  int get(){
+
+  int get() {
     display = false;
     return value;
   }
-  
-  boolean show(){
+
+  boolean show() {
     return display;
   }
 }

@@ -88,6 +88,7 @@ class Audio extends Enemigo{
   
   void shoot(Vec2 jugPos){
     if(a%50 == 0){
+      shootAudio.play();
       Vec2 pos = box2d.getBodyPixelCoord(this.body);
       float sprWidth = sprites[0][0].width;
       

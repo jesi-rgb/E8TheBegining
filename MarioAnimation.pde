@@ -16,6 +16,7 @@ final static int RIGHT_ARROW = 39;
 final static int DOWN_ARROW = 40;
 final int FULLSCREEN_WIDTH = 1920;
 final int FULLSCREEN_HEIGHT = 1080;
+int gameMode = 0;
 
 float wRatio;
 PFont font;
@@ -32,6 +33,10 @@ SoundFile intro;
 SoundFile meleeAttack;
 SoundFile coin;
 SoundFile charge;
+SoundFile shootAudio;
+SoundFile outOfAmmo;
+SoundFile deathAudio;
+SoundFile deathImg;
 
 ArrayList<Coin> coins;
 ArrayList<Charge> charges;
@@ -51,8 +56,8 @@ Boolean[] keys;
 
 void setup() {
 
-  //fullScreen(P2D);
-  size(1366, 768, P2D);
+  fullScreen(P2D);
+  //size(1366, 768, P2D);
   //size(720, 480, P2D);
   //size(720, 480, P2D);
   frameRate(40);
@@ -66,23 +71,25 @@ void setup() {
   box2d.listenForCollisions();
 
   bgMusic = new SoundFile(this, "media/music/bgMusic.wav");
-  //intro = new SoundFile(this, "media/music/intro.wav");
   jump = new SoundFile(this, "media/music/jump.wav");
   shoot = new SoundFile(this, "media/music/shoot.wav");
   meleeAttack = new SoundFile(this, "media/music/melee.mp3");
-  meleeAttack.amp(0.2);
-  shoot.amp(0.2);
-  jump.amp(0.4);
   coin = new SoundFile(this, "media/music/coin.wav");
   charge = new SoundFile(this, "media/music/charge.mp3");
+  shootAudio = new SoundFile(this, "media/music/shootAudio.wav");
+  deathAudio = new SoundFile(this, "media/music/deathAudio.wav");
+  deathImg = new SoundFile(this, "media/music/deathImg.wav");
+  outOfAmmo = new SoundFile(this, "media/music/outOfAmmo.wav");
+
   bgMusic.amp(0.4);
-  //intro.amp(0.4);
+  meleeAttack.amp(0.2);
+  shoot.amp(0.4);
+  jump.amp(0.4);
   shoot.amp(0.1);
   coin.amp(0.2);
   charge.amp(0.2);
-  //intro.play();
   bgMusic.loop();
-  
+
   spawners = new Vec2[3][3];
   spawners[0][0] = new Vec2(2*width/4, height/11);
   spawners[0][1] = new Vec2(width/4, height/2);
@@ -93,16 +100,16 @@ void setup() {
   spawners[2][0] = new Vec2(width/4, height/2);
   spawners[2][1] = new Vec2(3*width/4, height/10);
   spawners[2][2] = new Vec2(3*width/4, 2*height/10);
-  
+
 
   coins = new ArrayList<Coin>();
-  int k = int(random(0,2));
+  int k = int(random(0, 2));
   for (int c = 0; c < 6; c++) {
     coins.add(new Coin(new Vec2(spawners[2][k].x + 25*c, spawners[2][k].y)));
   }
-  
+
   charges = new ArrayList<Charge>();
-  k = int(random(0,2));
+  k = int(random(0, 2));
   charges.add(new Charge(spawners[2][k]));
 
   keys = new Boolean[256];
@@ -117,7 +124,7 @@ void setup() {
 
 
   jug = new Jugador(spawners[0][int(random(2))], "jugador", 8, 3, false);
-  
+
   enemigos.add(new Imagen(spawners[1][int(random(2))], "imgEnemy", 8, 2, false));
   enemigos.add(new Audio(spawners[1][int(random(2))], "audEnemy", 19, 2, true));
 
@@ -135,21 +142,144 @@ void setup() {
 }
 
 void draw() {
-  box2d.step(1/(frameRate * 2), 10, 10);
   shape(bg);
-  surface.display();
+  //surface.display();
+  //generacionElementos();
+  //displayMiscelanea();
+  //logicaJugador();
+  //logicaEnemigos();
+
+  switch(gameMode) {
+  case 0: //menu
+    menuDisplay();
+    break;
+  case 1: //juego
+
+    //steps de box2d para el motor de físicas
+    box2d.step(1/(frameRate * 2), 10, 10);
+
+    //display de fondo y formas
+    shape(bg);
+    surface.display();
+    generacionElementos();
+    displayMiscelanea();
+    logicaJugador();
+    logicaEnemigos();
+    if (keys['q'])
+      gameMode = 0;
+    break;
+    
+    
+  case 2: //statistics
+    displayPoints();
+    if (keys['q'])
+      gameMode = 0;
+    break;
+    
+    
+  case 3: // instructions
+    displayInstructions();
+    if (keys['q'])
+      gameMode = 0;
+    break;
+    
+    
+  case 4: //about
+    displayAbout();
+    if (keys['q'])
+      gameMode = 0;
+    break;
+  }
+}
+
+void menuDisplay() {
+  textAlign(CENTER);
+  fill(0);
+  textFont(font, 60);
+  text("E8 GAME: THE BEGGINING", width/2, height/4);
+  textFont(font, 35);
+
+  int dist = 60;
+  textAlign(LEFT);
+  pushMatrix();
+  translate(0, -dist);
+  text("Press 1 to start playing", width/12, height/2);
+  text("Press 2 to see statistics", width/12, height/2 + dist);
+  text("Press 3 to see the instructions", width/12, height/2 + 2*dist);
+  text("Press 4 for the credits", width/12, height/2 + 3*dist);
+  popMatrix();
+
+  textFont(font, 40);
+  textAlign(CENTER);
+  text("Press q to come back \n to the main menu", width/2, height/2 + 250);
+
+
+  switch(key) {
+  case '1':
+    gameMode = 1;
+    break;
+  case '2':
+    gameMode = 2;
+    break;
+  case '3':
+    gameMode = 3;
+    break;
+  case '4':
+    gameMode = 4;
+    break;
+  default:
+    gameMode = 0;
+    break;
+  }
+}
+
+void displayPoints() {
+}
+
+void displayInstructions(){
   
-  if(frameCount % 600 == 0){
-    println("Generando enemigos");
+  int dist = 80;
+  textAlign(LEFT);
+  textFont(font, 30);
+  pushMatrix();
+  translate(-dist, - 4 * dist);
+  text("- Use WASD to move and jump.", width/15, height/2);
+  text("- Press ',' to discharge and make \n great damage around you.", width/15, height/2 + dist);
+  text("- Press '.' to shoot your enemies down.", width/15, height/2 + 2*dist);
+  text("- Rainbow rays will recharge your energy \n and provide a bit of extra health.", width/15, height/2 + 3*dist);
+  text("- 1 and 0 are like coins, they give you points.", width/15, height/2 + 5*dist);
+  text("- All the elements (enemies and aids) \n are respawned every 10 seconds.", width/15, height/2 + 6*dist);
+  text("- How much can you last?", width/15, height/2 + 8*dist);
+
+  popMatrix();
+  
+}
+
+void displayAbout() {
+}
+
+
+
+
+
+
+
+
+
+void generacionElementos() {
+  if (frameCount % 400 == 0) {
     enemigos.add(new Imagen(spawners[1][int(random(2))], "imgEnemy", 8, 2, false));
     enemigos.add(new Audio(spawners[1][int(random(2))], "audEnemy", 19, 2, true));
-    int k = int(random(3,4));
-    for (int c = 0; c < 6; c++) {
+    int k = int(random(0, 2));
+    for (int c = 0; c < 3; c++) {
       coins.add(new Coin(new Vec2(spawners[2][k].x + 25*c, spawners[2][k].y)));
     }
-    k = int(random(3,4));
+    k = int(random(0, 2));
     charges.add(new Charge(spawners[2][k]));
   }
+}
+
+void displayMiscelanea() {
 
   for (int i=0; i<coins.size(); i++) {
     if (coins.get(i).show()) {
@@ -160,9 +290,9 @@ void draw() {
       c.killBody();
     }
   }
-  
+
   for (int i=0; i<charges.size(); i++) {
-    if(charges.get(i).show()){
+    if (charges.get(i).show()) {
       charges.get(i).display();
     } else {
       Charge c = charges.get(i);
@@ -170,16 +300,17 @@ void draw() {
       c.killBody();
     }
   }
+}
 
+void logicaJugador() {
   //Jugador
   if (jug != null) {
     if ( jug.vidaActual > 0 ) {
       textSize(30);
       fill(0);
-      textFont(font, 32);
-      text(jug.vidaActual, 40, 40);
-      text(jug.getCoins(), 150, 40);
-      text(jug.carga, 350, 40);
+      textFont(font, 20);
+      textAlign(LEFT);
+      text("HP: " + jug.vidaActual + "\t Points: "+jug.getCoins() + "\t Charge: "+jug.carga, 40, 40);
       jug.accion();
       jug.atacar(enemigos);
       jug.display();
@@ -197,17 +328,24 @@ void draw() {
     bgMusic.stop();
     setup();
   }
+}
 
+void logicaEnemigos() {
   //Enemigos
-  for(int i = 0; i<enemigos.size(); i++){
+  for (int i = 0; i<enemigos.size(); i++) {
     if (enemigos.get(i).vidaActual > 0) {
       enemigos.get(i).detectarJugador(jugPos);
       enemigos.get(i).display();
     } else {
-      if(jug != null){
+      if (jug != null) {
         jug.incrementCoins(100);
       }
-      enemigos.get(i).killBody();
+      Enemigo e = enemigos.get(i);
+      if (e instanceof Audio)
+        deathAudio.play();
+      else
+        if (e instanceof Imagen)
+          deathImg.play();
       enemigos.remove(i);
     }
   }
@@ -224,26 +362,32 @@ void draw() {
 }
 
 
+
+
+
+
+
+
+
+
 void beginContact(Contact cp) {
   Fixture f1 = cp.getFixtureA();
   Fixture f2 = cp.getFixtureB();
-  
-  println(f1.getUserData() + " " + f2.getUserData());
-  
+
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("coin")) ||
     (f2.getUserData().equals("jugador") && f1.getUserData().equals("coin")) ) {
-      Coin c;
-      if (f1.getUserData().equals("coin")) {
-        c = (Coin) f1.getBody().getUserData();
-      } else {
-        c = (Coin) f2.getBody().getUserData();
-      }
-      jug.incrementCoins(c.get());
-      coin.play();
+    Coin c;
+    if (f1.getUserData().equals("coin")) {
+      c = (Coin) f1.getBody().getUserData();
+    } else {
+      c = (Coin) f2.getBody().getUserData();
     }
-    
+    jug.incrementCoins(c.get());
+    coin.play();
+  }
+
   if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("charge")) ||
-  (f2.getUserData().equals("jugador") && f1.getUserData().equals("charge")) ) {
+    (f2.getUserData().equals("jugador") && f1.getUserData().equals("charge")) ) {
     Charge c;
     if (f1.getUserData().equals("charge")) {
       c = (Charge) f1.getBody().getUserData();
@@ -251,7 +395,7 @@ void beginContact(Contact cp) {
       c = (Charge) f2.getBody().getUserData();
     }
     c.get();
-    if(jug.vidaActual + 20 <= jug.vidaMax){
+    if (jug.vidaActual + 20 <= jug.vidaMax) {
       jug.vidaActual += 20;
     } else jug.vidaActual = jug.vidaMax;
     jug.recargar();
@@ -280,7 +424,7 @@ void beginContact(Contact cp) {
           b2.delete();
         } else {
           println(f1.getUserData() + " " + f2.getUserData());
-          if(f1.getUserData().equals("jugador") || f1.getUserData().equals("enemigo")){
+          if (f1.getUserData().equals("jugador") || f1.getUserData().equals("enemigo")) {
             Personaje e = (Personaje) f1.getBody().getUserData();
             e.takeDamage(b.damage);
           }
@@ -289,7 +433,7 @@ void beginContact(Contact cp) {
       b.delete();
     }
   }
-  
+
   if (f1.getUserData().equals("bulletAnimation")) {
     Bullet b = (Bullet) f1.getBody().getUserData();
 
@@ -299,7 +443,7 @@ void beginContact(Contact cp) {
           Bullet b2 = (Bullet) f2.getBody().getUserData();
           b2.delete();
         } else {
-          if(f2.getUserData().equals("jugador") || f2.getUserData().equals("enemigo")){
+          if (f2.getUserData().equals("jugador") || f2.getUserData().equals("enemigo")) {
             Personaje e = (Personaje) f2.getBody().getUserData();
             e.takeDamage(b.damage);
           }
@@ -307,28 +451,6 @@ void beginContact(Contact cp) {
       }
       b.delete();
     }
-    }
-    b.delete();
-
-  }
-  
-  if (f1.getUserData().equals("bulletAnimation")) {
-    Bullet b = (Bullet) f2.getBody().getUserData();
-    if (!f2.getUserData().equals(b.personaje)) {
-      if (!f2.getUserData().equals("suelo")) {
-        if (f2.getUserData().equals("bulletAnimation")) {
-          Bullet b2 = (Bullet) f2.getBody().getUserData();
-          b2.delete();
-        } else {
-          if(f2.getUserData().equals("jugador") || f2.getUserData().equals("enemigo")){
-            Personaje e = (Personaje) f2.getBody().getUserData();
-            e.takeDamage(b.damage);
-          }
-        }
-      }
-    }
-    b.delete();
-    
   }
 }
 

@@ -278,7 +278,7 @@ void generacionElementos() {
       coins.add(new Coin(new Vec2(spawners[2][k].x + 25*c, spawners[2][k].y)));
     }
     k = int(random(0, 2));
-    charges.add(new Charge(spawners[2][k]));
+    charges.add(new Charge(spawners[3][k]));
   }
 }
 
@@ -343,6 +343,7 @@ void logicaEnemigos() {
       if (jug != null) {
         jug.incrementCoins(100);
       }
+      enemigos.get(i).killBody();
       Enemigo e = enemigos.get(i);
       if (e instanceof Audio)
         deathAudio.play();
@@ -350,6 +351,7 @@ void logicaEnemigos() {
         if (e instanceof Imagen)
           deathImg.play();
       enemigos.remove(i);
+      e = null;
     }
   }
 

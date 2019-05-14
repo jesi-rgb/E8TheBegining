@@ -70,12 +70,12 @@ class Jugador extends Personaje {
   void jump() {
     Vec2 vel = body.getLinearVelocity();
 
-    
+
     //float diff =  vel.y - preVelY;
 
-   // if (abs(diff)>3) {
-   //   onAir=true;
-   // } else onAir = false;
+    // if (abs(diff)>3) {
+    //   onAir=true;
+    // } else onAir = false;
 
     //Si se pulsa space y no estamos en el aire, saltamos
     if ((keys[' '] || keys[UP_ARROW] || keys['w']) && !onAir) {
@@ -118,27 +118,27 @@ class Jugador extends Personaje {
         if (!meleeAttack.isPlaying())
           meleeAttack.play();
         Vec2 pos = box2d.getBodyPixelCoord(this.body);
-        if (currentDirection == LEFT) {
-          for (int i=0; i<enemigos.size(); i++) {
-            Vec2 posEnemy = box2d.getBodyPixelCoord(enemigos.get(i).body);
-            if (((posEnemy.x + enemigos.get(i).sprites[RIGHT][0].width/2) < (pos.x - ANCHO_ATAQUE/2)) &&
-              (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 < (pos.y - ALTO_ATAQUE/2)) &&
-              (posEnemy.y - enemigos.get(i).sprites[RIGHT][0].height/2 < (pos.y + ALTO_ATAQUE/2) &&
-              (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 > (pos.y - ALTO_ATAQUE/2)))) {
-              enemigos.get(i).recibirGolpe(LEFT, 20);
+        for (int i=0; i<enemigos.size(); i++) {
+          Vec2 posEnemy = box2d.getBodyPixelCoord(enemigos.get(i).body);
+          float x1 = pos.x-ANCHO_ATAQUE/2;
+          float x2 = pos.x+ANCHO_ATAQUE/2;
+          float y1 = pos.y-ALTO_ATAQUE/2;
+          float y2 = pos.y+ALTO_ATAQUE/2;
+          float anchoEnemigo = enemigos.get(i).sprites[RIGHT][0].width/2;
+          float altoEnemigo = enemigos.get(i).sprites[RIGHT][0].height/2;
+          if (((posEnemy.y + altoEnemigo >= y1) && (posEnemy.y - altoEnemigo <= y2))||
+            ((posEnemy.y - altoEnemigo <= y2) && (posEnemy.y - altoEnemigo >= y1))) {
+            if ((posEnemy.x - anchoEnemigo <= x2) && (posEnemy.x + anchoEnemigo >= x1)) {
+              println("Posicion enemigo: " + (posEnemy.x - anchoEnemigo) + "," + (posEnemy.x + anchoEnemigo));
+              println("Posicion jugador: " + x1 + "," + x2);
+              enemigos.get(i).recibirGolpe(LEFT, 10);
+            }
+            if ((posEnemy.x - anchoEnemigo <= x2) && (posEnemy.x + anchoEnemigo >= x1)) {
+              println("Posicion enemigo: " + (posEnemy.x - anchoEnemigo) + "," + (posEnemy.x + anchoEnemigo));
+              println("Posicion jugador: " + x1 + "," + x2);
+              enemigos.get(i).recibirGolpe(RIGHT, 10);
             }
           }
-        } else {
-          for (int i=0; i<enemigos.size(); i++) {
-            Vec2 posEnemy = box2d.getBodyPixelCoord(enemigos.get(i).body);
-            if (((posEnemy.x - enemigos.get(i).sprites[RIGHT][0].width/2) < (pos.x + ANCHO_ATAQUE/2)) &&
-              (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 > (pos.y - ALTO_ATAQUE/2)) &&
-              (posEnemy.y - enemigos.get(i).sprites[RIGHT][0].height/2 < (pos.y + ALTO_ATAQUE/2)) &&
-              (posEnemy.y + enemigos.get(i).sprites[RIGHT][0].height/2 > (pos.y - ALTO_ATAQUE/2))) {
-              enemigos.get(i).recibirGolpe(RIGHT, 20);
-            }
-          }
-          //rect(pos.x,  pos.y, ANCHO_ATAQUE, ALTO_ATAQUE);
         }
       }
     } else {

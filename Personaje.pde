@@ -148,9 +148,9 @@ abstract class Personaje {
 
   void recibirGolpe(int direction, int dmg) {
     if (direction == LEFT) {
-      body.applyForce(new Vec2(1000, 0), box2d.getBodyPixelCoord(body));
+      body.applyForce(new Vec2(2000, 0), box2d.getBodyPixelCoord(body));
     } else {
-      body.applyForce(new Vec2(-1000, 0), box2d.getBodyPixelCoord(body));
+      body.applyForce(new Vec2(-2000, 0), box2d.getBodyPixelCoord(body));
     }
     takeDamage(dmg);
   }

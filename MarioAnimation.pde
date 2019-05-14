@@ -61,8 +61,8 @@ Boolean[][] ocupados;
 
 void setup() {
 
-  //fullScreen(P2D);
-  size(1366, 768, P2D);
+  fullScreen(P2D);
+  //size(1366, 768, P2D);
   //size(1280, 720, P2D);
   //size(720, 480, P2D);
   frameRate(40);
@@ -268,15 +268,19 @@ void displayPoints() {
   float factor = 1.5;
   textAlign(LEFT);
   textFont(font, 60 * wRatio);
-  text("Mejores puntuaciones", width/15, height/10);
+  text("Best scores", width/15, height/10);
   textFont(font, 30 * wRatio);
   pushMatrix();
   translate(-dist, - 4 * dist);
-  java.util.Collections.sort(puntuaciones);
-  int cont = 0;
-  for (int i=puntuaciones.size()-1; i>=puntuaciones.size()-7; i--) {
-    text((cont+1) + ". " + puntuaciones.get(i), width/15, height/2 + factor * dist * (cont));
-    cont++;
+  if(puntuaciones.size()>0){
+    java.util.Collections.sort(puntuaciones);
+    int cont = 0;
+    for (int i=puntuaciones.size()-1; i>=puntuaciones.size()-7; i--) {
+      text((cont+1) + ". " + puntuaciones.get(i), width/15, height/2 + factor * dist * (cont));
+      cont++;
+    }
+  } else {
+    text("You haven't yet played the game\n\nWhatchu waiting for?", width/15, height/2);
   }
   popMatrix();
 

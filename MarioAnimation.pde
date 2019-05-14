@@ -56,9 +56,9 @@ Boolean[] keys;
 
 void setup() {
 
-  //fullScreen(P2D);
+  fullScreen(P2D);
   //size(1366, 768, P2D);
-  size(1280, 720, P2D);
+  //size(1280, 720, P2D);
   //size(720, 480, P2D);
   frameRate(40);
   imageMode(CENTER);
@@ -146,11 +146,6 @@ void setup() {
 
 void draw() {
   shape(bg);
-  //surface.display();
-  //generacionElementos();
-  //displayMiscelanea();
-  //logicaJugador();
-  //logicaEnemigos();
 
   switch(gameMode) {
   case 0: //menu
@@ -198,9 +193,9 @@ void draw() {
 void menuDisplay() {
   textAlign(CENTER);
   fill(0);
-  textFont(font, 60);
+  textFont(font, 60 * wRatio);
   text("E8 GAME: THE BEGGINING", width/2, height/4);
-  textFont(font, 35);
+  textFont(font, 35 * wRatio);
 
   int dist = 60;
   textAlign(LEFT);
@@ -212,9 +207,11 @@ void menuDisplay() {
   text("Press 4 for the credits", width/12, height/2 + 3*dist);
   popMatrix();
 
-  textFont(font, 40);
-  textAlign(CENTER);
-  text("Press q to come back \n to the main menu", width/2, height/2 + 250);
+  textFont(font, 40 * wRatio);
+  
+  textAlign(LEFT);
+  textFont(font, 30 * wRatio);
+  text("Press q to come back", 4*width/6, 9*height/10 + 30);
 
 
   switch(key) {
@@ -237,28 +234,43 @@ void menuDisplay() {
 }
 
 void displayPoints() {
+  
+  textAlign(LEFT);
+  textFont(font, 30 * wRatio);
+  text("Press q to come back", 4*width/6, 9*height/10 + 30);
 }
 
 void displayInstructions(){
   
-  int dist = 80;
+  float dist = 80 * wRatio;
+  float factor = 1.5;
   textAlign(LEFT);
-  textFont(font, 30);
+  textFont(font, 30 * wRatio);
   pushMatrix();
   translate(-dist, - 4 * dist);
   text("- Use WASD to move and jump.", width/15, height/2);
-  text("- Press ',' to discharge and make \n great damage around you.", width/15, height/2 + dist);
-  text("- Press '.' to shoot your enemies down.", width/15, height/2 + 2*dist);
-  text("- Rainbow rays will recharge your energy \n and provide a bit of extra health.", width/15, height/2 + 3*dist);
-  text("- 1 and 0 are like coins, they give you points.", width/15, height/2 + 5*dist);
-  text("- All the elements (enemies and aids) \n are respawned every 10 seconds.", width/15, height/2 + 6*dist);
-  text("- How much can you last?", width/15, height/2 + 8*dist);
-
+  text("- Press ',' to discharge and make \n great damage around you.", width/15, height/2 + factor*dist);
+  text("- Press '.' to shoot your enemies down.", width/15, height/2 + 2*factor*dist);
+  text("- Rainbow rays will recharge your energy \n and provide a bit of extra health.", width/15, height/2 + 3*factor*dist);
+  text("- 1 and 0 are like coins, they give you points.", width/15, height/2 + 4*factor*dist);
+  text("- All the elements (enemies and aids) \n are respawned every 10 seconds.", width/15, height/2 + 5*factor*dist);
+  text("- How much can you last?", width/15, height/2 + 6*factor*dist);
   popMatrix();
+  
+  textAlign(LEFT);
+  textFont(font, 30 * wRatio);
+  text("Press q to come back", 4*width/6, 9*height/10 + 30);
+  
   
 }
 
 void displayAbout() {
+  
+  
+  
+  textAlign(LEFT);
+  textFont(font, 30 * wRatio);
+  text("Press q to come back", 4*width/6, 9*height/10 + 30);
 }
 
 

@@ -57,6 +57,8 @@ PImage tex;
 
 Boolean[] keys;
 
+Boolean[][] ocupados;
+
 void setup() {
 
   //fullScreen(P2D);
@@ -92,30 +94,42 @@ void setup() {
   jump.amp(0.9);
   coin.amp(0.2);
   charge.amp(0.2);
-
+  
+  ocupados = new Boolean[2][3];
+  for(int i=0; i<2; i++){
+    for(int j=0; j<3; j++){
+      ocupados[i][j] = false;
+    }
+  }
+  
   spawners = new Vec2[4][3];
+  //Spawner jugador
   spawners[0][0] = new Vec2(2*width/4, height/11);
   spawners[0][1] = new Vec2(width/4, height/2);
   spawners[0][2] = new Vec2(width/4, height/4);
+  //Spawner jugatres
   spawners[1][0] = new Vec2(width/4, height/11);
   spawners[1][1] = new Vec2(3*width/4, height/2);
   spawners[1][2] = new Vec2(width/4, height/2);
-  spawners[2][0] = new Vec2(width/4, height/2);
+  //Spawner coins
+  spawners[2][0] = new Vec2(width/6, 7*height/10);
   spawners[2][1] = new Vec2(3*width/4, height/10);
-  spawners[2][2] = new Vec2(3*width/4, 2*height/10);
-  spawners[3][0] = new Vec2(width/2, height/10);
+  //spawners[2][2] = new Vec2(width/4, 2*height/10);
+  //Spawner charges
+  spawners[3][0] = new Vec2(3*width/5, height/20);
   spawners[3][1] = new Vec2(3*width/4, height/2);
-  spawners[3][2] = new Vec2(3*width/4, 2*height/5);
+  //spawners[3][2] = new Vec2(3*width/4, 2*height/5);
 
 
   coins = new ArrayList<Coin>();
-  int k = int(random(0, 2));
-  for (int c = 0; c < 6; c++) {
-    coins.add(new Coin(new Vec2(spawners[2][k].x + 50*c, spawners[2][k].y)));
+  int k = int(random(0, 1));
+  for (int c = 0; c < 3; c++) {
+    coins.add(new Coin(new Vec2(spawners[2][k].x + 25*c, spawners[2][k].y)));
+    ocupados[k][c] = true;
   }
 
   charges = new ArrayList<Charge>();
-  k = int(random(0, 2));
+  k = int(random(0, 1));
   charges.add(new Charge(spawners[3][k]));
 
   keys = new Boolean[256];
@@ -131,8 +145,13 @@ void setup() {
 
   jug = new Jugador(spawners[0][int(random(2))], "jugador", 8, 3, false);
 
-  enemigos.add(new Imagen(spawners[1][int(random(2))], "imgEnemy", 8, 2, false));
-  enemigos.add(new Audio(spawners[1][int(random(2))], "audEnemy", 19, 2, true));
+  int s1 = (int) random(2);
+  int s2;
+  do{
+    s2 = (int) random(2);
+  } while(s1==s2);
+  enemigos.add(new Imagen(spawners[1][s1], "imgEnemy", 8, 2, false));
+  enemigos.add(new Audio(spawners[1][s2], "audEnemy", 19, 2, true));
 
   tex = loadImage("media/scenarios/textures/texture.png");
   RG.init(this);
@@ -198,7 +217,7 @@ void draw() {
     break;
 
   case 5: //death screen
-    
+
     meleeAttack.stop();
     deathScreen();
     if (keys['q'])
@@ -217,7 +236,7 @@ void menuDisplay() {
   int dist = 60;
   textAlign(LEFT);
   pushMatrix();
-  
+
   text("Press 1 to start playing", width/12, height/2);
   text("Press 2 to see statistics", width/12, height/2 + dist);
   text("Press 3 to see the instructions", width/12, height/2 + 2*dist);
@@ -255,13 +274,13 @@ void displayPoints() {
   translate(-dist, - 4 * dist);
   java.util.Collections.sort(puntuaciones);
   int cont = 0;
-  for(int i=puntuaciones.size()-1; i>=0; i--){
+  for (int i=puntuaciones.size()-1; i>=puntuaciones.size()-7; i--) {
     text((cont+1) + ". " + puntuaciones.get(i), width/15, height/2 + factor * dist * (cont));
     cont++;
   }
   popMatrix();
-  
-  
+
+
   textAlign(LEFT);
   textFont(font, 30 * wRatio);
   text("Press q to come back", 4*width/6, 9*height/10 + 30);
@@ -294,7 +313,7 @@ void displayAbout() {
   fill(0);
   textAlign(CENTER);
   textFont(font, 50 * wRatio);
-  text("Game designed by: \nJesús Enrique Cartas Rascón (Jesi)\nand Álvaro Mendoza González (Mendo)", width/2, height/2 - 180 * wRatio);
+  text("Game designed and developed by: \nJesús Enrique Cartas Rascón (Jesi)\nand Álvaro Mendoza González (Mendo)", width/2, height/2 - 180 * wRatio);
   textFont(font, 40 * wRatio);
   text("Thanks to everyone who took the \ntime to play the game. \nIt means the world to us.", width/2, height/2 + 100 * wRatio);
 
@@ -309,7 +328,7 @@ void deathScreen() {
   fill(0);
   textAlign(CENTER);
   textFont(font, 30 * wRatio);
-  text("You died. Your final score was: "+jug.puntuacion, width/2, height/2);
+  text("You died. Your final score was: "+puntuaciones.get(puntuaciones.size()-1), width/2, height/2);
   text("Press F to pay respects and start a new game, \nor q to finish", width/2, height/2 + 80);
 
   if (keys['f'])
@@ -327,11 +346,19 @@ void deathScreen() {
 
 void generacionElementos() {
   if (frameCount % 400 == 0) {
-    enemigos.add(new Imagen(spawners[1][int(random(2))], "imgEnemy", 8, 2, false));
-    enemigos.add(new Audio(spawners[1][int(random(2))], "audEnemy", 19, 2, true));
+    int s1 = (int) random(2);
+    int s2;
+    do{
+      s2 = (int) random(2);
+    } while(s1==s2);
+    enemigos.add(new Imagen(spawners[1][s1], "imgEnemy", 8, 2, false));
+    enemigos.add(new Audio(spawners[1][s2], "audEnemy", 19, 2, true));
     int k = int(random(0, 2));
     for (int c = 0; c < 3; c++) {
-      coins.add(new Coin(new Vec2(spawners[2][k].x + 25*c, spawners[2][k].y)));
+      if(!ocupados[k][c]){
+        coins.add(new Coin(new Vec2(spawners[2][k].x + 25*c, spawners[2][k].y)));
+        ocupados[k][c] = true;
+      }
     }
     k = int(random(0, 2));
     charges.add(new Charge(spawners[3][k]));
@@ -400,8 +427,8 @@ void logicaEnemigos() {
       }
       enemigos.get(i).killBody();
       Enemigo e = enemigos.get(i);
-      if (e instanceof Audio){
-        //deathAudio.play();
+      if (e instanceof Audio) {
+        deathAudio.play();
       } else {
         if (e instanceof Imagen)
           deathImg.play();
@@ -422,113 +449,194 @@ void logicaEnemigos() {
     }
 }
 
-
-
-
-
-
-
-
-
-
 void beginContact(Contact cp) {
   Fixture f1 = cp.getFixtureA();
   Fixture f2 = cp.getFixtureB();
 
-  if (f1.getUserData().equals("jugador")) {
+  String elemento1 = (String) f1.getUserData();
+  String elemento2 = (String) f2.getUserData();    
+
+  switch(elemento1) {
+
+  case "jugador":
     Jugador j = (Jugador) f1.getBody().getUserData();
-    if (f2.getUserData().equals("suelo") || f2.getUserData().equals("enemigo")) {
+    switch(elemento2) {
+    case "suelo":
       j.onAir = false;
-    } else {
-      j.onAir=true;
-    }
-  }
+      break;
 
-  if (f2.getUserData().equals("jugador")) {
-    Jugador j = (Jugador) f2.getBody().getUserData();
-    if (f1.getUserData().equals("suelo") || f1.getUserData().equals("enemigo")) {
+    case "enemigo":
       j.onAir = false;
-    } else {
-      j.onAir=true;
-    }
-  }
+      j.takeDamage(10);
+      break;
 
-  if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("coin")) ||
-    (f2.getUserData().equals("jugador") && f1.getUserData().equals("coin")) ) {
-    coin.play();
-    Coin c;
-    if (f1.getUserData().equals("coin")) {
-      c = (Coin) f1.getBody().getUserData();
-    } else {
-      c = (Coin) f2.getBody().getUserData();
-    }
-    jug.incrementCoins(c.get());
-  }
+    case "bulletAnimation":
+      Bullet b = (Bullet) f2.getBody().getUserData();
+      if (b.personaje!=elemento1) {
+        j.takeDamage(b.damage);
+        b.delete();
+      }
+      break;
 
-  if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("charge")) ||
-    (f2.getUserData().equals("jugador") && f1.getUserData().equals("charge")) ) {
-    Charge c;
-    if (f1.getUserData().equals("charge")) {
-      c = (Charge) f1.getBody().getUserData();
-    } else {
-      c = (Charge) f2.getBody().getUserData();
-    }
-    c.get();
-    if (jug.vidaActual + 20 <= jug.vidaMax) {
-      jug.vidaActual += 20;
-    } else jug.vidaActual = jug.vidaMax;
-    jug.recargar();
-    charge.play();
-  }
-
-  if ((f1.getUserData().equals("jugador") && f2.getUserData().equals("enemigo")) ||
-    (f2.getUserData().equals("jugador") && f1.getUserData().equals("enemigo")) ) {
-    Personaje p;
-    if (f1.getUserData().equals("jugador")) {
-      p = (Personaje) f1.getBody().getUserData();
-    } else {
-      p = (Personaje) f2.getBody().getUserData();
-    }
-
-    p.takeDamage(10);
-  }
-
-  if (f2.getUserData().equals("bulletAnimation")) {
-    Bullet b = (Bullet) f2.getBody().getUserData();
-
-    if (!f1.getUserData().equals(b.personaje)) {
-      if (!f1.getUserData().equals("suelo")) {
-        if (f1.getUserData().equals("bulletAnimation")) {
-          Bullet b2 = (Bullet) f1.getBody().getUserData();
-          b2.delete();
-        } else {
-          if (f1.getUserData().equals("jugador") || f1.getUserData().equals("enemigo")) {
-            Personaje e = (Personaje) f1.getBody().getUserData();
-            e.takeDamage(b.damage);
+    case "coin":
+      Coin c = (Coin) f2.getBody().getUserData();
+      Vec2 pos = box2d.getBodyPixelCoord(c.body);
+      if(pos.y == 7*height/10){
+        for (int i = 0; i < 3; i++) {
+          if(pos.x == spawners[2][0].x + 25*i){
+            ocupados[0][i] = false;
+          }
+        }
+      } else {
+        if(pos.y == height/10){
+          for (int i = 0; i < 3; i++) {
+            if(pos.x == spawners[2][1].x + 25*i){
+              ocupados[1][i] = false;
+            }
           }
         }
       }
-      b.delete();
-    }
-  }
+      j.incrementCoins(c.get());
+      coin.play();
+      break;
 
-  if (f1.getUserData().equals("bulletAnimation")) {
+    case "charge":
+      Charge ch = (Charge) f2.getBody().getUserData();
+      j.recargar(ch.get());
+      charge.play();
+      break;
+    }
+    break;
+
+  case "suelo":
+    switch(elemento2) {
+
+    case "jugador":
+      Jugador ju = (Jugador) f2.getBody().getUserData();
+      ju.onAir = false;
+      break;
+
+    case "bulletAnimation":
+      Bullet bu = (Bullet) f2.getBody().getUserData();
+      bu.delete();
+      break;
+    }
+    break;
+
+  case "enemigo":
+    Enemigo e = (Enemigo) f1.getBody().getUserData();
+    switch(elemento2) {
+
+    case "jugador":
+      Jugador ju = (Jugador) f2.getBody().getUserData();
+      ju.onAir = false;
+      ju.takeDamage(10);
+      break;
+
+    case "bulletAnimation":
+      Bullet bu = (Bullet) f2.getBody().getUserData();
+      if (bu.personaje != elemento1) {
+        e.takeDamage(bu.damage);
+        bu.delete();
+      }
+      break;
+    }
+    break;
+
+  case "bulletAnimation":
     Bullet b = (Bullet) f1.getBody().getUserData();
+    boolean borrar = true;
 
-    if (!f2.getUserData().equals(b.personaje)) {
-      if (!f2.getUserData().equals("suelo")) {
-        if (f2.getUserData().equals("bulletAnimation")) {
-          Bullet b2 = (Bullet) f2.getBody().getUserData();
-          b2.delete();
-        } else {
-          if (f2.getUserData().equals("jugador") || f2.getUserData().equals("enemigo")) {
-            Personaje e = (Personaje) f2.getBody().getUserData();
-            e.takeDamage(b.damage);
+    switch(elemento2) {
+
+    case "jugador":
+      if (b.personaje != elemento2) {
+        Jugador ju = (Jugador) f2.getBody().getUserData();
+        ju.takeDamage(b.damage);
+      } else borrar = false;
+      break;
+
+    case "enemigo":
+      if (b.personaje != elemento2) {
+        Enemigo en = (Enemigo) f2.getBody().getUserData();
+        en.takeDamage(b.damage);
+      } else borrar = false;
+      break;
+
+    case "bulletAnimation":
+      Bullet b2 = (Bullet) f2.getBody().getUserData();
+      if (b.personaje != b2.personaje) {
+        b2.delete();
+      }
+      break;
+    
+    default:
+      borrar=true;
+      break;
+    }
+    
+    if(borrar){
+      b.delete();
+    }
+    
+    break;
+
+  case "coin":
+    Coin c = (Coin) f1.getBody().getUserData();
+    switch(elemento2) {
+    case "jugador":
+      Vec2 pos = box2d.getBodyPixelCoord(c.body);
+      if(pos.y == 7*height/10){
+        for (int i = 0; i < 3; i++) {
+          if(pos.x == spawners[2][0].x + 25*i){
+            ocupados[0][i] = false;
+          }
+        }
+      } else {
+        if(pos.y == height/10){
+          for (int i = 0; i < 3; i++) {
+            if(pos.x == spawners[2][1].x + 25*i){
+              ocupados[1][i] = false;
+            }
           }
         }
       }
-      b.delete();
+      Jugador ju = (Jugador) f2.getBody().getUserData();
+      ju.incrementCoins(c.get());
+      coin.play();
+      break;
+      
+    case "bulletAnimation":
+      Bullet bu = (Bullet) f2.getBody().getUserData();
+      bu.delete();
+      break;
+    
+    case "coin":
+      c.get();
+      break;
     }
+    break;
+    
+  case "charge":
+    Charge ch = (Charge) f1.getBody().getUserData();
+    switch(elemento2) {
+    case "jugador":
+      Jugador ju = (Jugador) f2.getBody().getUserData();
+      ju.recargar(ch.get());
+      charge.play();
+      break;
+      
+    case "bulletAnimation":
+      Bullet bu = (Bullet) f2.getBody().getUserData();
+      bu.delete();
+      break;
+      
+    case "charge":
+      println("charge + charge");
+      ch.get();
+      break;
+    }
+    break;
   }
 }
 

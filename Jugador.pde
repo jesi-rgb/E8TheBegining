@@ -129,13 +129,9 @@ class Jugador extends Personaje {
           if (((posEnemy.y + altoEnemigo >= y1) && (posEnemy.y - altoEnemigo <= y2))||
             ((posEnemy.y - altoEnemigo <= y2) && (posEnemy.y - altoEnemigo >= y1))) {
             if ((posEnemy.x - anchoEnemigo <= x2) && (posEnemy.x + anchoEnemigo >= x1)) {
-              println("Posicion enemigo: " + (posEnemy.x - anchoEnemigo) + "," + (posEnemy.x + anchoEnemigo));
-              println("Posicion jugador: " + x1 + "," + x2);
               enemigos.get(i).recibirGolpe(LEFT, 10);
             }
             if ((posEnemy.x - anchoEnemigo <= x2) && (posEnemy.x + anchoEnemigo >= x1)) {
-              println("Posicion enemigo: " + (posEnemy.x - anchoEnemigo) + "," + (posEnemy.x + anchoEnemigo));
-              println("Posicion jugador: " + x1 + "," + x2);
               enemigos.get(i).recibirGolpe(RIGHT, 10);
             }
           }
@@ -160,7 +156,10 @@ class Jugador extends Personaje {
     return puntuacion;
   }
 
-  void recargar() {
+  void recargar(int valor) {
     carga = cargaMax;
+    if(vidaActual + valor <= vidaMax){
+      vidaActual += valor;
+    } else vidaActual = vidaMax;
   }
 }

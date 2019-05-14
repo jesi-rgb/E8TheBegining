@@ -49,6 +49,8 @@ ArrayList<Bullet> projectiles;
 ArrayList<Enemigo> enemigos;
 Vec2[][] spawners;
 
+ArrayList<Integer> puntuaciones = new ArrayList<Integer>();
+
 PShape bg;
 PImage tex;
 
@@ -56,8 +58,8 @@ Boolean[] keys;
 
 void setup() {
 
-  fullScreen(P2D);
-  //size(1366, 768, P2D);
+  //fullScreen(P2D);
+  size(1366, 768, P2D);
   //size(1280, 720, P2D);
   //size(720, 480, P2D);
   frameRate(40);
@@ -233,6 +235,22 @@ void menuDisplay() {
 }
 
 void displayPoints() {
+  float dist = 80 * wRatio;
+  float factor = 1.5;
+  textAlign(LEFT);
+  textFont(font, 60 * wRatio);
+  text("Mejores puntuaciones", width/15, height/10);
+  textFont(font, 30 * wRatio);
+  pushMatrix();
+  translate(-dist, - 4 * dist);
+  java.util.Collections.sort(puntuaciones);
+  int cont = 0;
+  for(int i=puntuaciones.size()-1; i>=0; i--){
+    text((cont+1) + ". " + puntuaciones.get(i), width/15, height/2 + factor * dist * (cont));
+    cont++;
+  }
+  popMatrix();
+  
   
   textAlign(LEFT);
   textFont(font, 30 * wRatio);
@@ -330,6 +348,7 @@ void logicaJugador() {
       jug.display();
       jugPos = box2d.getBodyPixelCoord(jug.body);
     } else {
+      puntuaciones.add(jug.puntuacion);
       jug.killBody();
       jug = null;
       jugPos = new Vec2(10000, 10000);
@@ -356,11 +375,12 @@ void logicaEnemigos() {
       }
       enemigos.get(i).killBody();
       Enemigo e = enemigos.get(i);
-      if (e instanceof Audio)
-        deathAudio.play();
-      else
+      if (e instanceof Audio){
+        //deathAudio.play();
+      } else {
         if (e instanceof Imagen)
           deathImg.play();
+      }
       enemigos.remove(i);
       e = null;
     }

@@ -275,9 +275,12 @@ void displayPoints() {
   if(puntuaciones.size()>0){
     java.util.Collections.sort(puntuaciones);
     int cont = 0;
-    for (int i=puntuaciones.size()-1; i>=puntuaciones.size()-7; i--) {
+    for (int i=puntuaciones.size()-1; i>=0; i--) {
       text((cont+1) + ". " + puntuaciones.get(i), width/15, height/2 + factor * dist * (cont));
       cont++;
+      if(cont>6){
+        break;
+      }
     }
   } else {
     text("You haven't yet played the game\n\nWhatchu waiting for?", width/15, height/2);
@@ -502,12 +505,18 @@ void beginContact(Contact cp) {
       }
       j.incrementCoins(c.get());
       coin.play();
+      textAlign(CENTER);
+      fill(255);
+      text(c.value, box2d.getBodyPixelCoord(j.body).x, box2d.getBodyPixelCoord(j.body).y - j.sprites[RIGHT][0].height, 200);
       break;
 
     case "charge":
       Charge ch = (Charge) f2.getBody().getUserData();
       j.recargar(ch.get());
       charge.play();
+      textAlign(CENTER);
+      fill(30, 255, 225);
+      text(ch.value, box2d.getBodyPixelCoord(ch.body).x, box2d.getBodyPixelCoord(ch.body).y - ch.sprite[0].height);
       break;
     }
     break;
@@ -608,6 +617,9 @@ void beginContact(Contact cp) {
       Jugador ju = (Jugador) f2.getBody().getUserData();
       ju.incrementCoins(c.get());
       coin.play();
+      textAlign(CENTER);
+      fill(255);
+      text(c.value, box2d.getBodyPixelCoord(ju.body).x, box2d.getBodyPixelCoord(ju.body).y - ju.sprites[RIGHT][0].height, 200);
       break;
       
     case "bulletAnimation":
@@ -628,6 +640,9 @@ void beginContact(Contact cp) {
       Jugador ju = (Jugador) f2.getBody().getUserData();
       ju.recargar(ch.get());
       charge.play();
+      textAlign(CENTER);
+      fill(30, 255, 225);
+      text(ch.value, box2d.getBodyPixelCoord(ch.body).x, box2d.getBodyPixelCoord(ch.body).y - ch.sprite[0].height);
       break;
       
     case "bulletAnimation":

@@ -144,6 +144,9 @@ abstract class Personaje {
   void takeDamage(int dmg) {
     vidaActual -= dmg;
     takingDamage = true;
+    textAlign(CENTER);
+    fill(210, 0, 0);
+    text(dmg, box2d.getBodyPixelCoord(body).x, box2d.getBodyPixelCoord(body).y - sprites[RIGHT][0].height);
   }
 
   void recibirGolpe(int direction, int dmg) {
